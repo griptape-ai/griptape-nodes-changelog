@@ -385,3 +385,4 @@ component's changelog, so edit those instead:
 ### Added
 
 - A license key can now be supplied at launch through the `GRIPTAPE_NODES_LICENSE` environment variable, so machines can be provisioned without anyone pasting a key into Settings.
+- Linux builds now run on distributions with glibc 2.28 or newer.

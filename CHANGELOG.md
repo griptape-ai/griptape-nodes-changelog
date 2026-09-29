@@ -140,6 +140,25 @@ Releases of every Griptape Nodes component, grouped by date, newest first.
   spot, and Cmd+D creates each group child once. Nodes created inside a group from the Tab menu
   join the group, and a node the engine refuses to add to a group leaves it and shows an error.
 
+### Desktop 0.27.0
+
+#### Added
+
+- Administrators can now turn off app updates by setting
+  `GTN_DESKTOP_DISABLE_UPDATES=1` in the app's environment.
+
+#### Changed
+
+- The bundled version of the Griptape Nodes app has been updated to `0.100.0`.
+- The bundled version of the editor has been updated to `0.127.0`.
+
+#### Fixed
+
+- MCP servers launched with commands like `npx` or `uvx` now start when the app
+  is opened from Finder, the Dock, or a desktop launcher. The app now finds
+  tools installed through Homebrew, nvm, and similar version managers, instead
+  of failing with "No such file or directory: 'npx'".
+
 ## 2026-09-24
 
 ### [Engine 0.102.0](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.101.0...v0.102.0)

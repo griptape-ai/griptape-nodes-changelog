@@ -181,6 +181,47 @@
       ]
     },
     {
+      "component": "Desktop",
+      "version": "0.27.0",
+      "date": "2026-09-29",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Added",
+          "entries": [
+            {
+              "text": "- Administrators can now turn off app updates by setting\n  `GTN_DESKTOP_DISABLE_UPDATES=1` in the app's environment.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "- The bundled version of the Griptape Nodes app has been updated to `0.100.0`.",
+              "breaking": false
+            },
+            {
+              "text": "- The bundled version of the editor has been updated to `0.127.0`.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "- MCP servers launched with commands like `npx` or `uvx` now start when the app\n  is opened from Finder, the Dock, or a desktop launcher. The app now finds\n  tools installed through Homebrew, nvm, and similar version managers, instead\n  of failing with \"No such file or directory: 'npx'\".",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "component": "Engine",
       "version": "0.102.0",
       "date": "2026-09-24",

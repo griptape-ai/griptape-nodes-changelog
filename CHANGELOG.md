@@ -96,10 +96,6 @@
 
 #### Changed
 
-- **Breaking:** The editor asks its host to send Griptape Cloud requests, so credits, usage, and
-  billing load on on-prem installs that reach Griptape Cloud through an admin server. Hosts that
-  embed the editor need `@griptape-ai/nodes-bridge` 0.6.0, which cannot serve earlier editor
-  builds, so update the bridge and the editor together.
 - The left sidebar is now a narrow icon rail that no longer expands. Your account, credits,
   billing, and "Admin Dashboard" move into an account menu at the top right of the editor, and
   light and dark mode move to Settings → "Theme Settings". To get the expandable sidebar back, turn
@@ -137,6 +133,12 @@
 - Duplicating a group or pasting copied nodes keeps their layout instead of stacking them in one
   spot, and Cmd+D creates each group child once. Nodes created inside a group from the Tab menu
   join the group, and a node the engine refuses to add to a group leaves it and shows an error.
+
+### Desktop 0.27.1
+
+#### Fixed
+
+- Credit balance and organization show again in the editor, including on-prem installs that reach Griptape Cloud through an admin server.
 
 ### Desktop 0.27.0
 
@@ -224,6 +226,12 @@
 - Image, video, audio, and 3D parameters no longer fail when given an inline `data:` URI longer than
   the operating system's file name limit, which any real image exceeds. The URI is kept as the
   parameter's value.
+- Image, video, audio, and 3D inputs given a file path use the file where it already is, instead of
+  copying it into `staticfiles/`. The copy could overwrite a different file with the same name. A
+  saved workflow now depends on its input files staying put: moving, renaming, or deleting one
+  breaks the workflow, and an input outside the workspace is referenced by its absolute path, so the
+  project is no longer portable across machines for those inputs.
+  [#5647](https://github.com/griptape-ai/griptape-nodes-engine/issues/5647)
 - Model dropdowns no longer mark every model "Not permitted by your license" when two installed
   libraries provide a node with the same name.
   [#5618](https://github.com/griptape-ai/griptape-nodes-engine/issues/5618)

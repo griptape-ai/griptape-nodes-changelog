@@ -1,6 +1,7 @@
 {
   "sources": [
     "Engine",
+    "App",
     "Editor",
     "Desktop"
   ],
@@ -119,10 +120,6 @@
           "type": "Changed",
           "entries": [
             {
-              "text": "- **Breaking:** The editor asks its host to send Griptape Cloud requests, so credits, usage, and\n  billing load on on-prem installs that reach Griptape Cloud through an admin server. Hosts that\n  embed the editor need `@griptape-ai/nodes-bridge` 0.6.0, which cannot serve earlier editor\n  builds, so update the bridge and the editor together.",
-              "breaking": true
-            },
-            {
               "text": "- The left sidebar is now a narrow icon rail that no longer expands. Your account, credits,\n  billing, and \"Admin Dashboard\" move into an account menu at the top right of the editor, and\n  light and dark mode move to Settings → \"Theme Settings\". To get the expandable sidebar back, turn\n  off \"Compact sidebar\" in Settings → \"Beta Features\".",
               "breaking": false
             },
@@ -174,6 +171,25 @@
             },
             {
               "text": "- Duplicating a group or pasting copied nodes keeps their layout instead of stacking them in one\n  spot, and Cmd+D creates each group child once. Nodes created inside a group from the Tab menu\n  join the group, and a node the engine refuses to add to a group leaves it and shows an error.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "component": "Desktop",
+      "version": "0.27.1",
+      "date": "2026-09-29",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "- Credit balance and organization show again in the editor, including on-prem installs that reach Griptape Cloud through an admin server.",
               "breaking": false
             }
           ]
@@ -309,6 +325,10 @@
             },
             {
               "text": "- Image, video, audio, and 3D parameters no longer fail when given an inline `data:` URI longer than\n  the operating system's file name limit, which any real image exceeds. The URI is kept as the\n  parameter's value.",
+              "breaking": false
+            },
+            {
+              "text": "- Image, video, audio, and 3D inputs given a file path use the file where it already is, instead of\n  copying it into `staticfiles/`. The copy could overwrite a different file with the same name. A\n  saved workflow now depends on its input files staying put: moving, renaming, or deleting one\n  breaks the workflow, and an input outside the workspace is referenced by its absolute path, so the\n  project is no longer portable across machines for those inputs.\n  [#5647](https://github.com/griptape-ai/griptape-nodes-engine/issues/5647)",
               "breaking": false
             },
             {

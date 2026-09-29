@@ -6,6 +6,9 @@ with each entry flagged `breaking` when it leads with `**Breaking:**`.
 
 Both files are generated. Edit the component changelogs instead.
 
+Both are safe to publish: links into GitHub repos that aren't public are removed, keeping the link
+text, and issue references into them are dropped.
+
 ## Adding a component
 
 Add a `[[source]]` to [sources.toml](sources.toml). The changelog must follow

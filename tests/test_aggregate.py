@@ -5,7 +5,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from aggregate import Source, merge, parse, render_markdown  # noqa: E402
+from aggregate import Source, merge, parse, redact, render_markdown, strip_private_links  # noqa: E402
 
 SOURCE = Source(name="Engine", repo="org/engine", path="docs/CHANGELOG.md")
 
@@ -121,6 +121,32 @@ class RenderTest(unittest.TestCase):
                 "#### Removed",
             ],
         )
+
+
+
+def is_public(repo):
+    return repo == "org/public"
+
+
+class PrivateLinkTest(unittest.TestCase):
+    def test_unlinks_private_and_drops_issue_references(self):
+        text = (
+            "- See [docs](https://github.com/org/private/blob/HEAD/x.md) and [#2](https://github.com/org/private/issues/2) now.\n"
+            "  [#3](https://github.com/org/private/issues/3)\n"
+            "  [private#4](https://github.com/org/private/issues/4)\n"
+            "  [#5](https://github.com/org/public/issues/5) [site](https://example.com)"
+        )
+        self.assertEqual(
+            strip_private_links(text, is_public),
+            "- See docs and now.\n  [#5](https://github.com/org/public/issues/5) [site](https://example.com)",
+        )
+
+    def test_redact_clears_private_release_urls(self):
+        public = parse("## [1] - 2026-01-01\n\n[1]: https://github.com/org/public/compare/a...b\n", SOURCE)
+        private = parse("## [2] - 2026-01-01\n\n[2]: https://github.com/org/private/compare/a...b\n", SOURCE)
+        redact([SOURCE], public + private, is_public)
+        self.assertEqual(public[0].url, "https://github.com/org/public/compare/a...b")
+        self.assertIsNone(private[0].url)
 
 
 if __name__ == "__main__":

@@ -1,28 +1,12 @@
 {
   "sources": [
-    {
-      "name": "Engine",
-      "repo": "griptape-ai/griptape-nodes-engine",
-      "path": "CHANGELOG.md",
-      "url": "https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/CHANGELOG.md"
-    },
-    {
-      "name": "Editor",
-      "repo": "griptape-ai/REDACTED",
-      "path": "CHANGELOG.md",
-      "url": "https://github.com/griptape-ai/REDACTED/blob/HEAD/CHANGELOG.md"
-    },
-    {
-      "name": "Desktop",
-      "repo": "griptape-ai/REDACTED",
-      "path": "CHANGELOG.md",
-      "url": "https://github.com/griptape-ai/REDACTED/blob/HEAD/CHANGELOG.md"
-    }
+    "Engine",
+    "Editor",
+    "Desktop"
   ],
   "releases": [
     {
       "component": "Engine",
-      "repo": "griptape-ai/griptape-nodes-engine",
       "version": "0.103.0",
       "date": "2026-09-29",
       "yanked": false,
@@ -92,26 +76,25 @@
     },
     {
       "component": "Editor",
-      "repo": "griptape-ai/REDACTED",
       "version": "127",
       "date": "2026-09-29",
       "yanked": false,
-      "url": "https://github.com/griptape-ai/REDACTED/compare/v126...v127",
+      "url": null,
       "summary": null,
       "changes": [
         {
           "type": "Added",
           "entries": [
             {
-              "text": "- The \"Controls under minimap\" beta feature moves the canvas controls to a compact horizontal bar\n  directly below the minimap, in the bottom-right corner. The bar includes zoom out, a percentage\n  dropdown with preset zoom levels (25 %–200 %), zoom in, fit view, a minimap toggle, and a grid\n  settings button. The grid button opens a popover to show or hide the background grid, change the\n  grid type (Cross, Dots, Lines), adjust grid size and gap with sliders, and enable snapping with\n  a configurable snap size. It is on by default; the bar appears when Settings → General → \"Show\n  Canvas Controls\" is enabled.\n  [#3040](https://github.com/griptape-ai/REDACTED/issues/3040)",
+              "text": "- The \"Controls under minimap\" beta feature moves the canvas controls to a compact horizontal bar\n  directly below the minimap, in the bottom-right corner. The bar includes zoom out, a percentage\n  dropdown with preset zoom levels (25 %–200 %), zoom in, fit view, a minimap toggle, and a grid\n  settings button. The grid button opens a popover to show or hide the background grid, change the\n  grid type (Cross, Dots, Lines), adjust grid size and gap with sliders, and enable snapping with\n  a configurable snap size. It is on by default; the bar appears when Settings → General → \"Show\n  Canvas Controls\" is enabled.",
               "breaking": false
             },
             {
-              "text": "- Settings has a \"Beta Features\" page for turning unfinished features on before they become the\n  default. Open it from Settings → Settings → \"Beta Features\" or the `#settings-beta` URL hash.\n  Engines that list their own beta features show them there too. The first one, \"Toolbar placement\n  button\", moves the floating canvas toolbar between the top and bottom of the canvas.\n  [#3013](https://github.com/griptape-ai/REDACTED/issues/3013)",
+              "text": "- Settings has a \"Beta Features\" page for turning unfinished features on before they become the\n  default. Open it from Settings → Settings → \"Beta Features\" or the `#settings-beta` URL hash.\n  Engines that list their own beta features show them there too. The first one, \"Toolbar placement\n  button\", moves the floating canvas toolbar between the top and bottom of the canvas.",
               "breaking": false
             },
             {
-              "text": "- The \"Workflow Already Exists\" dialog can save the workflow under a free name, such as\n  `Sales Report 2`, in the same folder, instead of only overwriting or cancelling.\n  [#2850](https://github.com/griptape-ai/REDACTED/issues/2850)",
+              "text": "- The \"Workflow Already Exists\" dialog can save the workflow under a free name, such as\n  `Sales Report 2`, in the same folder, instead of only overwriting or cancelling.",
               "breaking": false
             },
             {
@@ -127,7 +110,7 @@
               "breaking": false
             },
             {
-              "text": "- Beta feature \"Individual node toolbars in multi-select\", on by default: each selected node shows\n  its own toolbar, and its buttons act on that node only. The single shared toolbar that appeared\n  when several nodes were selected is gone. Lock, duplicate, and delete for the whole selection are\n  in the main canvas toolbar and also work with one node selected. Zoomed out below 40%, node\n  toolbars fade out until you hover the node. Change that level with \"Toolbar fade zoom threshold\"\n  in Settings → Editor → \"Button Customization\". Turn the feature off in Settings → \"Beta Features\".\n  [#3017](https://github.com/griptape-ai/REDACTED/issues/3017)",
+              "text": "- Beta feature \"Individual node toolbars in multi-select\", on by default: each selected node shows\n  its own toolbar, and its buttons act on that node only. The single shared toolbar that appeared\n  when several nodes were selected is gone. Lock, duplicate, and delete for the whole selection are\n  in the main canvas toolbar and also work with one node selected. Zoomed out below 40%, node\n  toolbars fade out until you hover the node. Change that level with \"Toolbar fade zoom threshold\"\n  in Settings → Editor → \"Button Customization\". Turn the feature off in Settings → \"Beta Features\".",
               "breaking": false
             }
           ]
@@ -136,7 +119,7 @@
           "type": "Changed",
           "entries": [
             {
-              "text": "- **Breaking:** The editor asks its host to send Griptape Cloud requests, so credits, usage, and\n  billing load on on-prem installs that reach Griptape Cloud through an admin server. Hosts that\n  embed the editor need `@griptape-ai/nodes-bridge` 0.6.0, which cannot serve earlier editor\n  builds, so update the bridge and the editor together.\n  [REDACTED#434](https://github.com/griptape-ai/REDACTED/issues/434)",
+              "text": "- **Breaking:** The editor asks its host to send Griptape Cloud requests, so credits, usage, and\n  billing load on on-prem installs that reach Griptape Cloud through an admin server. Hosts that\n  embed the editor need `@griptape-ai/nodes-bridge` 0.6.0, which cannot serve earlier editor\n  builds, so update the bridge and the editor together.",
               "breaking": true
             },
             {
@@ -148,7 +131,7 @@
               "breaking": false
             },
             {
-              "text": "- The app header has no gradient and gains a bottom border that separates it from the canvas in\n  dark mode. The File, Manage, Settings, and Help menus no longer sit in a bordered box.\n  [#3024](https://github.com/griptape-ai/REDACTED/issues/3024)",
+              "text": "- The app header has no gradient and gains a bottom border that separates it from the canvas in\n  dark mode. The File, Manage, Settings, and Help menus no longer sit in a bordered box.",
               "breaking": false
             }
           ]
@@ -161,7 +144,7 @@
               "breaking": false
             },
             {
-              "text": "- The faded Griptape Nodes logo no longer shows in the top-right corner of the canvas.\n  [#3002](https://github.com/griptape-ai/REDACTED/issues/3002)",
+              "text": "- The faded Griptape Nodes logo no longer shows in the top-right corner of the canvas.",
               "breaking": false
             }
           ]
@@ -186,11 +169,11 @@
               "breaking": false
             },
             {
-              "text": "- Resizing the right sidebar no longer freezes when the mouse pauses mid-drag. Pressing just left\n  of its edge no longer leaves a selection box following the cursor over the canvas.\n  [#3044](https://github.com/griptape-ai/REDACTED/issues/3044)",
+              "text": "- Resizing the right sidebar no longer freezes when the mouse pauses mid-drag. Pressing just left\n  of its edge no longer leaves a selection box following the cursor over the canvas.",
               "breaking": false
             },
             {
-              "text": "- Duplicating a group or pasting copied nodes keeps their layout instead of stacking them in one\n  spot, and Cmd+D creates each group child once. Nodes created inside a group from the Tab menu\n  join the group, and a node the engine refuses to add to a group leaves it and shows an error.\n  [#2962](https://github.com/griptape-ai/REDACTED/issues/2962)",
+              "text": "- Duplicating a group or pasting copied nodes keeps their layout instead of stacking them in one\n  spot, and Cmd+D creates each group child once. Nodes created inside a group from the Tab menu\n  join the group, and a node the engine refuses to add to a group leaves it and shows an error.",
               "breaking": false
             }
           ]
@@ -199,7 +182,6 @@
     },
     {
       "component": "Engine",
-      "repo": "griptape-ai/griptape-nodes-engine",
       "version": "0.102.0",
       "date": "2026-09-24",
       "yanked": false,
@@ -338,11 +320,10 @@
     },
     {
       "component": "Desktop",
-      "repo": "griptape-ai/REDACTED",
       "version": "0.26.0",
       "date": "2026-09-15",
       "yanked": false,
-      "url": "https://github.com/griptape-ai/REDACTED/compare/v0.25.1...v0.26.0",
+      "url": null,
       "summary": null,
       "changes": [
         {
@@ -362,11 +343,10 @@
     },
     {
       "component": "Desktop",
-      "repo": "griptape-ai/REDACTED",
       "version": "0.25.1",
       "date": "2026-09-11",
       "yanked": false,
-      "url": "https://github.com/griptape-ai/REDACTED/compare/v0.25.0...v0.25.1",
+      "url": null,
       "summary": null,
       "changes": [
         {
@@ -386,11 +366,10 @@
     },
     {
       "component": "Desktop",
-      "repo": "griptape-ai/REDACTED",
       "version": "0.25.0",
       "date": "2026-09-07",
       "yanked": false,
-      "url": "https://github.com/griptape-ai/REDACTED/compare/v0.24.0...v0.25.0",
+      "url": null,
       "summary": null,
       "changes": [
         {
@@ -428,11 +407,10 @@
     },
     {
       "component": "Desktop",
-      "repo": "griptape-ai/REDACTED",
       "version": "0.24.0",
       "date": "2026-09-01",
       "yanked": false,
-      "url": "https://github.com/griptape-ai/REDACTED/compare/v0.23.2...v0.24.0",
+      "url": null,
       "summary": null,
       "changes": [
         {
@@ -486,11 +464,10 @@
     },
     {
       "component": "Desktop",
-      "repo": "griptape-ai/REDACTED",
       "version": "0.23.2",
       "date": "2026-08-19",
       "yanked": false,
-      "url": "https://github.com/griptape-ai/REDACTED/compare/v0.23.1...v0.23.2",
+      "url": null,
       "summary": null,
       "changes": [
         {
@@ -510,11 +487,10 @@
     },
     {
       "component": "Desktop",
-      "repo": "griptape-ai/REDACTED",
       "version": "0.23.1",
       "date": "2026-08-18",
       "yanked": false,
-      "url": "https://github.com/griptape-ai/REDACTED/compare/v0.23.0...v0.23.1",
+      "url": null,
       "summary": null,
       "changes": [
         {
@@ -530,11 +506,10 @@
     },
     {
       "component": "Desktop",
-      "repo": "griptape-ai/REDACTED",
       "version": "0.23.0",
       "date": "2026-08-18",
       "yanked": false,
-      "url": "https://github.com/griptape-ai/REDACTED/compare/v0.22.3...v0.23.0",
+      "url": null,
       "summary": null,
       "changes": [
         {
@@ -596,11 +571,10 @@
     },
     {
       "component": "Desktop",
-      "repo": "griptape-ai/REDACTED",
       "version": "0.22.3",
       "date": "2026-08-07",
       "yanked": false,
-      "url": "https://github.com/griptape-ai/REDACTED/compare/v0.22.2...v0.22.3",
+      "url": null,
       "summary": null,
       "changes": [
         {
@@ -616,11 +590,10 @@
     },
     {
       "component": "Desktop",
-      "repo": "griptape-ai/REDACTED",
       "version": "0.22.2",
       "date": "2026-08-05",
       "yanked": false,
-      "url": "https://github.com/griptape-ai/REDACTED/compare/v0.22.1...v0.22.2",
+      "url": null,
       "summary": null,
       "changes": [
         {
@@ -636,11 +609,10 @@
     },
     {
       "component": "Desktop",
-      "repo": "griptape-ai/REDACTED",
       "version": "0.22.1",
       "date": "2026-08-05",
       "yanked": false,
-      "url": "https://github.com/griptape-ai/REDACTED/compare/v0.22.0...v0.22.1",
+      "url": null,
       "summary": null,
       "changes": [
         {
@@ -656,11 +628,10 @@
     },
     {
       "component": "Desktop",
-      "repo": "griptape-ai/REDACTED",
       "version": "0.22.0",
       "date": "2026-08-04",
       "yanked": false,
-      "url": "https://github.com/griptape-ai/REDACTED/compare/v0.21.4...v0.22.0",
+      "url": null,
       "summary": null,
       "changes": [
         {
@@ -693,11 +664,10 @@
     },
     {
       "component": "Desktop",
-      "repo": "griptape-ai/REDACTED",
       "version": "0.21.4",
       "date": "2026-08-03",
       "yanked": false,
-      "url": "https://github.com/griptape-ai/REDACTED/compare/v0.21.3...v0.21.4",
+      "url": null,
       "summary": null,
       "changes": [
         {
@@ -722,11 +692,10 @@
     },
     {
       "component": "Desktop",
-      "repo": "griptape-ai/REDACTED",
       "version": "0.21.3",
       "date": "2026-08-03",
       "yanked": false,
-      "url": "https://github.com/griptape-ai/REDACTED/compare/v0.21.2...v0.21.3",
+      "url": null,
       "summary": null,
       "changes": [
         {

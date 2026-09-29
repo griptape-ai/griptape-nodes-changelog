@@ -20,6 +20,7 @@ import tomllib
 import urllib.error
 import urllib.request
 from dataclasses import asdict, dataclass, field
+from itertools import groupby
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -229,26 +230,59 @@ def merge(per_source: list[list[Release]]) -> list[Release]:
     return sorted(releases, key=lambda release: release.date, reverse=True)
 
 
+def _slug(heading: str) -> str:
+    """GitHub's anchor for a heading's text."""
+    return re.sub(r"[^\w\- ]", "", heading.lower()).replace(" ", "-")
+
+
+def _first_sentence(text: str) -> str:
+    """The lead sentence of an entry, without its bullet or breaking marker."""
+    flat = " ".join(line.strip() for line in text.splitlines())
+    flat = flat[2:].removeprefix(BREAKING).strip()
+    return re.split(r"(?<=[.!?])\s", flat, maxsplit=1)[0]
+
+
 def render_markdown(sources: list[Source], releases: list[Release]) -> str:
     out = [
         "# Griptape Nodes Changelog",
         "",
-        "Releases of every Griptape Nodes component, newest first. This file is generated from each",
-        "component's changelog, so edit those instead:",
+        "Releases of every Griptape Nodes component, grouped by date, newest first. This file is",
+        "generated from each component's changelog, so edit those instead:",
         "",
         *[f"- [{source.name}]({source.url})" for source in sources],
     ]
-    for release in releases:
-        title = f"{release.component} {release.version}"
-        if release.url:
-            title = f"[{title}]({release.url})"
-        out += ["", f"## {release.date} · {title}{' [YANKED]' if release.yanked else ''}"]
-        if release.summary:
-            out += ["", release.summary]
-        for change in release.changes:
-            out += ["", f"### {change.type}", ""]
-            out += [entry.text for entry in change.entries]
+    for date, group in groupby(releases, key=lambda release: release.date):
+        group = list(group)
+        out += ["", f"## {date}"]
+
+        breaking = [
+            (release, entry)
+            for release in group
+            for change in release.changes
+            for entry in change.entries
+            if entry.breaking
+        ]
+        if breaking:
+            out += ["", "### Breaking changes", ""]
+            for release, entry in breaking:
+                anchor = _slug(_release_label(release))
+                out.append(f"- {release.component}: {_first_sentence(entry.text)} [Details](#{anchor})")
+
+        for release in group:
+            label = _release_label(release)
+            title = f"[{label}]({release.url})" if release.url else label
+            out += ["", f"### {title}"]
+            if release.summary:
+                out += ["", release.summary]
+            for change in release.changes:
+                out += ["", f"#### {change.type}", ""]
+                out += [entry.text for entry in change.entries]
     return "\n".join(out) + "\n"
+
+
+def _release_label(release: Release) -> str:
+    label = f"{release.component} {release.version}"
+    return f"{label} [YANKED]" if release.yanked else label
 
 
 def render_json(sources: list[Source], releases: list[Release]) -> str:

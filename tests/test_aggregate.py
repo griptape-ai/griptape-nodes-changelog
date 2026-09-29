@@ -1,3 +1,4 @@
+import re
 import sys
 import unittest
 from pathlib import Path
@@ -96,9 +97,38 @@ class MergeTest(unittest.TestCase):
             [(r.component, r.version) for r in merged],
             [("Engine", "1.1.0"), ("Editor", "5"), ("Engine", "1.0.0")],
         )
-        markdown = render_markdown([SOURCE, editor], merged)
-        self.assertIn("## 2026-02-01 · [Engine 1.1.0](https://github.com/org/engine/compare/", markdown)
-        self.assertIn("## 2026-01-01 · Engine 1.0.0 [YANKED]", markdown)
+
+
+class RenderTest(unittest.TestCase):
+    def setUp(self):
+        editor = Source(name="Editor", repo="org/editor")
+        other = parse("## [5] - 2026-02-01\n\n### Added\n\n- X.\n", editor)
+        self.markdown = render_markdown([SOURCE, editor], merge([parse(CHANGELOG, SOURCE), other]))
+
+    def test_releases_grouped_under_date(self):
+        headings = [line for line in self.markdown.splitlines() if re.match(r"#+ (?!\[9)", line)]
+        self.assertEqual(
+            headings,
+            [
+                "## 2026-02-01",
+                "### Breaking changes",
+                "### [Engine 1.1.0](https://github.com/org/engine/compare/v1.0.0...v1.1.0)",
+                "#### Added",
+                "#### Fixed",
+                "### Editor 5",
+                "#### Added",
+                "## 2026-01-01",
+                "### Engine 1.0.0 [YANKED]",
+                "#### Removed",
+            ],
+        )
+
+    def test_breaking_summary_links_to_release(self):
+        self.assertIn(
+            "- Engine: Thing, see [guide](https://github.com/org/engine/blob/HEAD/MIGRATION.md#step) "
+            "and [#1](https://github.com/org/engine/issues/1). [Details](#engine-110)",
+            self.markdown,
+        )
 
 
 if __name__ == "__main__":

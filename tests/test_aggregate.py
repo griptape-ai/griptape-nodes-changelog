@@ -111,7 +111,6 @@ class RenderTest(unittest.TestCase):
             headings,
             [
                 "## 2026-02-01",
-                "### Breaking changes",
                 "### [Engine 1.1.0](https://github.com/org/engine/compare/v1.0.0...v1.1.0)",
                 "#### Added",
                 "#### Fixed",
@@ -121,13 +120,6 @@ class RenderTest(unittest.TestCase):
                 "### Engine 1.0.0 [YANKED]",
                 "#### Removed",
             ],
-        )
-
-    def test_breaking_summary_links_to_release(self):
-        self.assertIn(
-            "- Engine: Thing, see [guide](https://github.com/org/engine/blob/HEAD/MIGRATION.md#step) "
-            "and [#1](https://github.com/org/engine/issues/1). [Details](#engine-110)",
-            self.markdown,
         )
 
 

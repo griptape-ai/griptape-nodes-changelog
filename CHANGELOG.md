@@ -9,11 +9,6 @@ generated from each component's changelog, so edit those instead:
 
 ## 2026-09-29
 
-### Breaking changes
-
-- Engine: The setting `worker.heartbeat_startup_grace_s` is now `worker.library_load_timeout_s` (env `GTN_CONFIG_WORKER__LIBRARY_LOAD_TIMEOUT_S`). [Details](#engine-01030)
-- Editor: The editor asks its host to send Griptape Cloud requests, so credits, usage, and billing load on on-prem installs that reach Griptape Cloud through an admin server. [Details](#editor-127)
-
 ### [Engine 0.103.0](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.102.0...v0.103.0)
 
 #### Changed
@@ -158,12 +153,6 @@ generated from each component's changelog, so edit those instead:
   [#2962](https://github.com/griptape-ai/REDACTED/issues/2962)
 
 ## 2026-09-24
-
-### Breaking changes
-
-- Engine: `WorkflowPackager.package_to_folder` returns a `PackagedBundle` with the bundled workflow's path and the library paths, instead of a list of library paths. [Details](#engine-01020)
-- Engine: When a parameter's `ui_options` and a custom trait set the same key, the trait's value now wins, so node code can no longer override a trait's widget settings through `ui_options`. [Details](#engine-01020)
-- Engine: `LibraryLoadedNotification` no longer carries `node_schemas`. [Details](#engine-01020)
 
 ### [Engine 0.102.0](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.101.0...v0.102.0)
 

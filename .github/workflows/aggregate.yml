@@ -1,0 +1,45 @@
+name: Aggregate
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+  # Source repos can send this after a release to update right away.
+  repository_dispatch:
+    types: [changelog-updated]
+  push:
+    branches: [main]
+    paths: [sources.toml, scripts/**, tests/**, .github/workflows/aggregate.yml]
+  pull_request:
+
+concurrency:
+  group: aggregate-${{ github.ref }}
+
+permissions:
+  contents: write
+
+jobs:
+  aggregate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m unittest discover -s tests -v
+      - name: Aggregate
+        env:
+          GH_TOKEN: ${{ secrets.CHANGELOG_TOKEN }}
+        run: python scripts/aggregate.py
+      - name: Commit changes
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          git add CHANGELOG.md changelog.json
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: aggregate changelogs"
+          git push

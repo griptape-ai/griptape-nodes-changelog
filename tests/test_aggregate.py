@@ -106,7 +106,7 @@ class RenderTest(unittest.TestCase):
         self.markdown = render_markdown([SOURCE, editor], merge([parse(CHANGELOG, SOURCE), other]))
 
     def test_releases_grouped_under_date(self):
-        headings = [line for line in self.markdown.splitlines() if re.match(r"#+ (?!\[9)", line)]
+        headings = [line for line in self.markdown.splitlines() if re.match(r"##+ (?!\[9)", line)]
         self.assertEqual(
             headings,
             [

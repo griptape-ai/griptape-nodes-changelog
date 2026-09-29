@@ -1,3 +1,4 @@
+import json
 import re
 import sys
 import unittest
@@ -5,7 +6,16 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from aggregate import Source, merge, parse, redact, render_markdown, strip_private_links  # noqa: E402
+from aggregate import (  # noqa: E402
+    Source,
+    merge,
+    parse,
+    plain_entry,
+    redact,
+    render_json,
+    render_markdown,
+    strip_private_links,
+)
 
 SOURCE = Source(name="Engine", repo="org/engine", path="docs/CHANGELOG.md")
 
@@ -122,6 +132,26 @@ class RenderTest(unittest.TestCase):
             ],
         )
 
+
+class JsonTest(unittest.TestCase):
+    def setUp(self):
+        source = Source(name="Desktop App", repo="org/app")
+        self.data = json.loads(render_json([source], parse(CHANGELOG, source)))
+
+    def test_schema_version_and_ids(self):
+        self.assertEqual(self.data["schema_version"], 1)
+        self.assertEqual([r["id"] for r in self.data["releases"]], ["desktop-app@1.1.0", "desktop-app@1.0.0"])
+        self.assertNotIn("repo", self.data["releases"][0])
+
+    def test_entry_text_has_no_list_markup(self):
+        added = self.data["releases"][0]["changes"][0]["entries"]
+        self.assertTrue(added[0]["text"].startswith("**Breaking:** Thing"))
+        self.assertTrue(added[0]["text"].endswith(".\nContinued line."))
+
+    def test_plain_entry(self):
+        self.assertEqual(plain_entry("- One."), "One.")
+        self.assertEqual(plain_entry("* A\n  B\n\n  ```\n    x\n  ```"), "A\nB\n\n```\n  x\n```")
+        self.assertEqual(plain_entry("Prose."), "Prose.")
 
 
 def is_public(repo):

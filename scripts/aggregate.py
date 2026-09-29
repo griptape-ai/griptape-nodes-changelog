@@ -19,6 +19,7 @@ import os
 import posixpath
 import re
 import sys
+import textwrap
 import tomllib
 import urllib.error
 import urllib.request
@@ -42,6 +43,8 @@ GITHUB_REPO = re.compile(r"^https://github\.com/([\w.-]+/[\w.-]+)")
 ISSUE_REFERENCE = re.compile(r"^[\w.-]*#\d+$")
 SCHEME = re.compile(r"^[a-zA-Z][a-zA-Z0-9+.-]*:")
 BREAKING = "**Breaking:**"
+# Bump when changelog.json changes incompatibly.
+SCHEMA_VERSION = 1
 
 
 @dataclass(frozen=True)
@@ -319,10 +322,32 @@ def _release_label(release: Release) -> str:
     return f"{label} [YANKED]" if release.yanked else label
 
 
+def release_id(release: Release) -> str:
+    return f"{release.component.lower().replace(' ', '-')}@{release.version}"
+
+
+def plain_entry(text: str) -> str:
+    """Drop the list marker and continuation indent, leaving the entry's own Markdown."""
+    if not ENTRY.match(text):
+        return text
+    first, _, rest = text.partition("\n")
+    return f"{first[2:]}\n{textwrap.dedent(rest)}" if rest else first[2:]
+
+
+def _release_json(release: Release) -> dict:
+    data = {"id": release_id(release)}
+    data.update((k, v) for k, v in asdict(release).items() if k != "repo")
+    for change in data["changes"]:
+        for entry in change["entries"]:
+            entry["text"] = plain_entry(entry["text"])
+    return data
+
+
 def render_json(sources: list[Source], releases: list[Release]) -> str:
     data = {
+        "schema_version": SCHEMA_VERSION,
         "sources": [source.name for source in sources],
-        "releases": [{k: v for k, v in asdict(release).items() if k != "repo"} for release in releases],
+        "releases": [_release_json(release) for release in releases],
     }
     return json.dumps(data, indent=2, ensure_ascii=False) + "\n"
 

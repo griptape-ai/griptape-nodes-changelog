@@ -4,6 +4,23 @@
 timeline, newest first. [changelog.json](changelog.json) holds the same data for apps and docs,
 with each entry flagged `breaking` when it leads with `**Breaking:**`.
 
+```json
+{
+  "schema_version": 1,
+  "sources": ["Engine", "App", "Editor", "Desktop"],
+  "releases": [{
+    "id": "engine@0.103.0",
+    "component": "Engine", "version": "0.103.0", "date": "2026-09-29",
+    "yanked": false, "url": "https://github.com/...", "summary": null,
+    "changes": [{ "type": "Changed", "entries": [{ "text": "**Breaking:** ...", "breaking": true }] }]
+  }]
+}
+```
+
+Releases are newest first. `text`, `summary`, and `type` are Markdown. `url` and `summary` may be
+null. Versions aren't all semver, so compare by position or `date`, not version. `schema_version`
+changes only on incompatible changes.
+
 Both files are generated. Edit the component changelogs instead.
 
 Both are safe to publish: links into GitHub repos that aren't public are removed, keeping the link

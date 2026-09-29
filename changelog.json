@@ -76,6 +76,67 @@
       ]
     },
     {
+      "component": "App",
+      "version": "0.100.0",
+      "date": "2026-09-29",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Added",
+          "entries": [
+            {
+              "text": "- The engine now registers with the Griptape Cloud engine registry, so clients can discover it.",
+              "breaking": false
+            },
+            {
+              "text": "- `transports.websocket_direct.advertise_url` sets the URL clients use to reach the direct websocket\n  server.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "- Griptape Nodes Engine is pinned to 0.103.0. See its\n  [release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.103.0).",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "- `GT_CLOUD_BASE_URL` set only in a `.env` file is now used for license checks.",
+              "breaking": false
+            },
+            {
+              "text": "- Nodes running in a worker process now use the engine's project and static file server.",
+              "breaking": false
+            },
+            {
+              "text": "- Node runs no longer hang when the engine uses worker processes.",
+              "breaking": false
+            },
+            {
+              "text": "- On Windows, worker processes no longer fail to connect with `ERROR_PIPE_BUSY`.",
+              "breaking": false
+            },
+            {
+              "text": "- A slow local-socket client no longer stalls other clients.",
+              "breaking": false
+            },
+            {
+              "text": "- The static file server no longer raises `MarkupError` on request paths containing `[/...]`.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "component": "Editor",
       "version": "127",
       "date": "2026-09-29",

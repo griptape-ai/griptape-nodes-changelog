@@ -64,6 +64,28 @@
   the legacy template fall back to the same layout. See
   [Situations](https://docs.griptapenodes.com/en/stable/guides/projects/situations/#save_output_directory).
 
+### App 0.100.0
+
+#### Added
+
+- The engine now registers with the Griptape Cloud engine registry, so clients can discover it.
+- `transports.websocket_direct.advertise_url` sets the URL clients use to reach the direct websocket
+  server.
+
+#### Changed
+
+- Griptape Nodes Engine is pinned to 0.103.0. See its
+  [release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.103.0).
+
+#### Fixed
+
+- `GT_CLOUD_BASE_URL` set only in a `.env` file is now used for license checks.
+- Nodes running in a worker process now use the engine's project and static file server.
+- Node runs no longer hang when the engine uses worker processes.
+- On Windows, worker processes no longer fail to connect with `ERROR_PIPE_BUSY`.
+- A slow local-socket client no longer stalls other clients.
+- The static file server no longer raises `MarkupError` on request paths containing `[/...]`.
+
 ### Editor 127
 
 #### Added

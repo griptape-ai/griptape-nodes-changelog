@@ -9,8 +9,8 @@ Both files are generated. Edit the component changelogs instead.
 ## Adding a component
 
 Add a `[[source]]` to [sources.toml](sources.toml). The changelog must follow
-[Keep a Changelog 2.0.0](https://keepachangelog.com/en/2.0.0/) and `CHANGELOG_TOKEN` must be able
-to read the repo.
+[Keep a Changelog 2.0.0](https://keepachangelog.com/en/2.0.0/) and the changelog GitHub App must
+be installed on the repo.
 
 ## How it updates
 
@@ -21,8 +21,9 @@ to read the repo.
 gh api repos/griptape-ai/griptape-nodes-changelog/dispatches -f event_type=changelog-updated
 ```
 
-It fetches each source from its default branch and commits the output when it changes. The
-`CHANGELOG_TOKEN` secret needs read access to contents of every source repo.
+It fetches each source from its default branch and commits the output when it changes. It reads
+the sources as a GitHub App with Contents: read, set by the `CHANGELOG_APP_ID` variable and the
+`CHANGELOG_APP_PRIVATE_KEY` secret.
 
 ## Running locally
 

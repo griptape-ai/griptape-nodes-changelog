@@ -27,9 +27,17 @@ jobs:
         with:
           python-version: "3.13"
       - run: python -m unittest discover -s tests -v
+      # Scoped to every repo the app is installed on, so a source only needs the app installed.
+      - id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.CHANGELOG_APP_ID }}
+          private-key: ${{ secrets.CHANGELOG_APP_PRIVATE_KEY }}
+          owner: griptape-ai
+          permission-contents: read
       - name: Aggregate
         env:
-          GH_TOKEN: ${{ secrets.CHANGELOG_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: python scripts/aggregate.py
       - name: Commit changes
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'

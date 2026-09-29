@@ -1,7 +1,10 @@
-"""Merge the changelogs listed in sources.toml into CHANGELOG.md and changelog.json.
+"""Merge the changelogs listed in CHANGELOG_SOURCES into CHANGELOG.md and changelog.json.
 
 Usage:
-    python scripts/aggregate.py [--sources sources.toml] [--out-dir .]
+    CHANGELOG_SOURCES="$(cat sources.toml)" python scripts/aggregate.py [--out-dir .]
+
+CHANGELOG_SOURCES holds TOML with one [[source]] table per changelog. It stays out of the repo
+so internal repo names aren't published.
 
 Each source is fetched from its repo's default branch via the GitHub API. Set GH_TOKEN (or
 GITHUB_TOKEN) to a token that can read every listed repo; internal repos 404 without one.
@@ -76,10 +79,8 @@ class Release:
     changes: list[Change]
 
 
-def load_sources(path: Path) -> list[Source]:
-    with path.open("rb") as file:
-        data = tomllib.load(file)
-    return [Source(**source) for source in data["source"]]
+def load_sources(text: str) -> list[Source]:
+    return [Source(**source) for source in tomllib.loads(text)["source"]]
 
 
 def _api(path: str, token: str | None, accept: str = "application/vnd.github+json") -> str:
@@ -97,8 +98,9 @@ def fetch(source: Source, token: str | None) -> str:
     try:
         return _api(f"repos/{source.repo}/contents/{source.path}", token, "application/vnd.github.raw")
     except urllib.error.HTTPError as error:
+        # Name the component, not the repo, so public CI logs don't leak it.
         hint = " (is GH_TOKEN set and allowed to read it?)" if error.code == 404 else ""
-        raise SystemExit(f"{source.repo}/{source.path}: HTTP {error.code}{hint}") from error
+        raise SystemExit(f"{source.name}: HTTP {error.code}{hint}") from error
 
 
 class Visibility:
@@ -232,7 +234,7 @@ def parse(markdown: str, source: Source) -> list[Release]:
             continue
         version, date, yanked = heading.group(1), heading.group(2), bool(heading.group(3))
         if not date:
-            print(f"warning: {source.repo} {version} has no date, skipped", file=sys.stderr)
+            print(f"warning: {source.name} {version} has no date, skipped", file=sys.stderr)
             continue
         section = body_lines[start + 1 : end]
         summary, changes = _parse_body([line for line, _ in section], [f for _, f in section])
@@ -327,12 +329,14 @@ def render_json(sources: list[Source], releases: list[Release]) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--sources", type=Path, default=ROOT / "sources.toml")
     parser.add_argument("--out-dir", type=Path, default=ROOT)
     args = parser.parse_args()
 
     token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
-    sources = load_sources(args.sources)
+    text = os.environ.get("CHANGELOG_SOURCES")
+    if not text:
+        raise SystemExit("CHANGELOG_SOURCES is not set")
+    sources = load_sources(text)
     releases = merge([parse(fetch(source, token), source) for source in sources])
     redact(sources, releases, Visibility(token).is_public)
 

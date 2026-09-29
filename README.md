@@ -11,7 +11,17 @@ text, and issue references into them are dropped.
 
 ## Adding a component
 
-Add a `[[source]]` to [sources.toml](sources.toml). The changelog must follow
+Sources live in the `CHANGELOG_SOURCES` Actions secret, not the repo, so internal repo names stay
+private. It holds TOML, one table per component, in tie-break order for releases on the same date:
+
+```toml
+[[source]]
+name = "Engine"
+repo = "griptape-ai/griptape-nodes-engine"
+path = "CHANGELOG.md"
+```
+
+Add a `[[source]]` and update the secret. The changelog must follow
 [Keep a Changelog 2.0.0](https://keepachangelog.com/en/2.0.0/) and the changelog GitHub App must
 be installed on the repo.
 
@@ -32,7 +42,9 @@ the sources as a GitHub App with Contents: read, set by the `CHANGELOG_APP_ID` v
 
 ```sh
 python -m unittest discover -s tests
-GH_TOKEN=$(gh auth token) python scripts/aggregate.py
+GH_TOKEN=$(gh auth token) CHANGELOG_SOURCES="$(cat sources.toml)" python scripts/aggregate.py
 ```
+
+`sources.toml` is gitignored. Secrets can't be read back, so keep your own copy.
 
 Python 3.11 or later, standard library only.

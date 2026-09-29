@@ -9,7 +9,7 @@ on:
     types: [changelog-updated]
   push:
     branches: [main]
-    paths: [sources.toml, scripts/**, tests/**, .github/workflows/aggregate.yml]
+    paths: [scripts/**, tests/**, .github/workflows/aggregate.yml]
   pull_request:
 
 concurrency:
@@ -38,6 +38,8 @@ jobs:
       - name: Aggregate
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          # A secret, not a variable, so the internal repo names stay masked in public logs.
+          CHANGELOG_SOURCES: ${{ secrets.CHANGELOG_SOURCES }}
         run: python scripts/aggregate.py
       - name: Commit changes
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'

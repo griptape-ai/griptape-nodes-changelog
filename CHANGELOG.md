@@ -2,8 +2,6 @@
 
 # Griptape Nodes Changelog
 
-Releases of every Griptape Nodes component, grouped by date, newest first.
-
 ## 2026-09-29
 
 ### [Engine 0.103.0](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.102.0...v0.103.0)

@@ -60,12 +60,20 @@
             {
               "text": "**Breaking:** The setting `worker.heartbeat_startup_grace_s` is now `worker.library_load_timeout_s`\n(env `GTN_CONFIG_WORKER__LIBRARY_LOAD_TIMEOUT_S`). With its heartbeat role removed, what it bounds\nis how long a worker may take to load its library, which the new name states. A config file still\nsetting the old name silently falls back to the 600 second default.",
               "breaking": true
+            },
+            {
+              "text": "Workflows run in a subprocess now verify TLS certificates against the operating system's trust\nstore, matching the app.",
+              "breaking": false
             }
           ]
         },
         {
           "type": "Fixed",
           "entries": [
+            {
+              "text": "A `Workflow Node` now starts each parameter it exposes from a workflow's `Start Flow` node with\nthe value set on that `Start Flow` node, instead of leaving it empty. The value is saved with the\nworkflow, so a workflow saved before this release needs saving again to carry it. Values such as\nimages keep the parameter's own default.\n[#5698](https://github.com/griptape-ai/griptape-nodes-engine/issues/5698)",
+              "breaking": false
+            },
             {
               "text": "The process a library runs isolated in shuts down within about 35 seconds of losing the engine\nthat started it. Before, if that engine exited in the process's first 10 minutes, the process\nstayed up until those 10 minutes had passed. `worker.library_load_timeout_s` no longer delays\nthat check; it still bounds how long the engine waits for the process to load its library.\nSetting `worker.heartbeat_timeout_s` below 30 seconds does not shorten this, on purpose: a busy\nengine can be slow to challenge, and a library's process must not read that as an engine that died.",
               "breaking": false

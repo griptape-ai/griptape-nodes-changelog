@@ -8,6 +8,44 @@
   ],
   "releases": [
     {
+      "id": "desktop@0.27.2",
+      "component": "Desktop",
+      "version": "0.27.2",
+      "date": "2026-09-30",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Added",
+          "entries": [
+            {
+              "text": "The account menu in the top right now shows your name and email (or license name), your plan,\nand your usage credit balance, which you can click to refresh. Signed-in accounts also get a\n\"Billing\" item that opens the editor's billing window.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "The account button in the top right now shows only a user icon. Your name, or the license name\nwith a key icon, appears inside the menu instead. A license set by the environment still shows\nits name on the button.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "Settings notifications are no longer see-through.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "engine@0.103.0",
       "component": "Engine",
       "version": "0.103.0",

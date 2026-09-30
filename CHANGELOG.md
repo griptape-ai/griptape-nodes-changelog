@@ -2,6 +2,26 @@
 
 # Griptape Nodes Changelog
 
+## 2026-09-30
+
+### Desktop 0.27.2
+
+#### Added
+
+- The account menu in the top right now shows your name and email (or license name), your plan,
+  and your usage credit balance, which you can click to refresh. Signed-in accounts also get a
+  "Billing" item that opens the editor's billing window.
+
+#### Changed
+
+- The account button in the top right now shows only a user icon. Your name, or the license name
+  with a key icon, appears inside the menu instead. A license set by the environment still shows
+  its name on the button.
+
+#### Fixed
+
+- Settings notifications are no longer see-through.
+
 ## 2026-09-29
 
 ### [Engine 0.103.0](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.102.0...v0.103.0)

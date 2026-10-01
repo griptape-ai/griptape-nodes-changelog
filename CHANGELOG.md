@@ -35,6 +35,12 @@
 - Workflows run in a subprocess now verify TLS certificates against the operating system's trust
   store, matching the app.
 
+#### Removed
+
+- **Breaking:** The engine no longer patches `httpx`, `httpx2`, and `requests` to read `file://` URLs,
+  local paths, and cloud asset URLs in workflows run or published in a subprocess. Nodes that fetched
+  those through `httpx`, `httpx2`, or `requests` must read the file directly instead.
+
 #### Fixed
 
 - A `Workflow Node` now starts each parameter it exposes from a workflow's `Start Flow` node with

@@ -68,6 +68,15 @@
           ]
         },
         {
+          "type": "Removed",
+          "entries": [
+            {
+              "text": "**Breaking:** The engine no longer patches `httpx`, `httpx2`, and `requests` to read `file://` URLs,\nlocal paths, and cloud asset URLs in workflows run or published in a subprocess. Nodes that fetched\nthose through `httpx`, `httpx2`, or `requests` must read the file directly instead.",
+              "breaking": true
+            }
+          ]
+        },
+        {
           "type": "Fixed",
           "entries": [
             {

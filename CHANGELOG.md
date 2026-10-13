@@ -310,6 +310,41 @@
   crafted image or clipboard payload run any command or module when loaded. Data from earlier
   versions is read by a reader that builds only saved value types and applies the same checks.
 
+### App 0.101.0
+
+#### Added
+
+- Engine registry records now include `is_executing`, so clients can tell which engines are
+  running a flow without connecting to each one. The value covers only the engine's own flows,
+  not its workers' flows, and is `null` when execution state is unreadable.
+
+#### Changed
+
+- Griptape Nodes Engine is pinned to 0.104.0. See its
+  [release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.104.0).
+- `gtn` no longer prints routine startup, connection, and shutdown details, such as the
+  addresses it listens on, license checks and renewals, editor connections, and worker activity.
+  Errors, warnings, the reason it stopped, and a websocket reconnect after a dropped connection
+  still print. Set `log_level` to `DEBUG` to see the rest. Griptape Cloud HTTP requests are
+  hidden at every level.
+- `gtn` now warns when `GRIPTAPE_NODES_EDITOR_DIST` points at a folder without `local-parent/`
+  and `editor/`.
+
+#### Removed
+
+- **Breaking:** The engine started by `gtn` no longer patches `httpx` and `requests` to read
+  `file://` URLs, local paths, and cloud asset URLs. Nodes that fetched those through `httpx` or
+  `requests` must read the file directly instead.
+
+#### Fixed
+
+- On Windows, `gtn` no longer logs `ConnectionResetError: [WinError 10054]` ERROR tracebacks that
+  look like a crash when the editor drops a media download partway through, such as while you
+  seek in a video preview.
+- A request whose result holds a value with no JSON form now gets a failure naming that value,
+  instead of no reply and a timeout. Other events holding such a value are logged and not sent,
+  rather than sent with the value turned into text.
+
 ## 2026-09-30
 
 ### Desktop 0.27.2

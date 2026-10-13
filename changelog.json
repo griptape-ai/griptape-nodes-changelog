@@ -308,6 +308,88 @@
       ]
     },
     {
+      "id": "desktop@0.28.0",
+      "component": "Desktop",
+      "version": "0.28.0",
+      "date": "2026-10-13",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Added",
+          "entries": [
+            {
+              "text": "The \"What's New\" window after an update also lists changes to the bundled\nengine, app, and editor since the version you last ran.",
+              "breaking": false
+            },
+            {
+              "text": "Settings > Updates has a \"What's New\" link to reopen the current version's\nrelease notes.",
+              "breaking": false
+            },
+            {
+              "text": "License users can now see their running engines in the engine list.",
+              "breaking": false
+            },
+            {
+              "text": "The app connects to engines directly when it can. Signed-in users can switch an engine to connect\nthrough Griptape Cloud from the engine list.",
+              "breaking": false
+            },
+            {
+              "text": "License users can enable \"Route HTTPS traffic through this server\" in App Settings to route\nstorage, library, and model downloads through their Griptape server's proxy. Requires admin\nserver 0.4.0 or later.",
+              "breaking": false
+            },
+            {
+              "text": "Administrators can set the Griptape server endpoint and traffic routing with the\n`GTN_DESKTOP_SERVER_URL` and `GTN_DESKTOP_ROUTE_TRAFFIC_THROUGH_SERVER` environment variables.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "The bundled version of the Griptape Nodes app has been updated to `0.101.1`.",
+              "breaking": false
+            },
+            {
+              "text": "The bundled version of the editor has been updated to `0.128.0`.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "The editor follows the app's light, dark, or system theme instead of always starting dark.",
+              "breaking": false
+            },
+            {
+              "text": "When the editor loses its connection to a running engine, for example during a large run, it\nstays open and reconnects on its own instead of showing \"Engine failed to start\".",
+              "breaking": false
+            },
+            {
+              "text": "Licenses now show the name your organization gave them, instead of \"Interactive license\" or\n\"Headless license\".",
+              "breaking": false
+            },
+            {
+              "text": "The engine, organization, and account menus close when you click on the editor.",
+              "breaking": false
+            },
+            {
+              "text": "The app now opens even if its config directory can't be written to, for example on a read-only\nor locked-down filesystem, instead of silently failing to start with no window and no error.\nRemoving or deactivating a license still reports an error in that case, since the engine may\nkeep using the license until it's cleared.",
+              "breaking": false
+            },
+            {
+              "text": "When the engine fails to start, the engine log keeps its error output instead of showing only\nthe exit code.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "engine@0.104.0",
       "component": "Engine",
       "version": "0.104.0",
@@ -655,6 +737,10 @@
           "entries": [
             {
               "text": "Griptape Nodes Engine is pinned to 0.104.0. See its\n[release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.104.0).",
+              "breaking": false
+            },
+            {
+              "text": "The editor installed with the `editor` extra is pinned to 0.128.0.",
               "breaking": false
             },
             {

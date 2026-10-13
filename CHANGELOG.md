@@ -223,6 +223,43 @@
 - Parameters whose name matches a styling class, such as `invert` or `hidden`, no longer render
   inverted or disappear from the node.
 
+### Desktop 0.28.0
+
+#### Added
+
+- The "What's New" window after an update also lists changes to the bundled
+  engine, app, and editor since the version you last ran.
+- Settings > Updates has a "What's New" link to reopen the current version's
+  release notes.
+- License users can now see their running engines in the engine list.
+- The app connects to engines directly when it can. Signed-in users can switch an engine to connect
+  through Griptape Cloud from the engine list.
+- License users can enable "Route HTTPS traffic through this server" in App Settings to route
+  storage, library, and model downloads through their Griptape server's proxy. Requires admin
+  server 0.4.0 or later.
+- Administrators can set the Griptape server endpoint and traffic routing with the
+  `GTN_DESKTOP_SERVER_URL` and `GTN_DESKTOP_ROUTE_TRAFFIC_THROUGH_SERVER` environment variables.
+
+#### Changed
+
+- The bundled version of the Griptape Nodes app has been updated to `0.101.1`.
+- The bundled version of the editor has been updated to `0.128.0`.
+
+#### Fixed
+
+- The editor follows the app's light, dark, or system theme instead of always starting dark.
+- When the editor loses its connection to a running engine, for example during a large run, it
+  stays open and reconnects on its own instead of showing "Engine failed to start".
+- Licenses now show the name your organization gave them, instead of "Interactive license" or
+  "Headless license".
+- The engine, organization, and account menus close when you click on the editor.
+- The app now opens even if its config directory can't be written to, for example on a read-only
+  or locked-down filesystem, instead of silently failing to start with no window and no error.
+  Removing or deactivating a license still reports an error in that case, since the engine may
+  keep using the license until it's cleared.
+- When the engine fails to start, the engine log keeps its error output instead of showing only
+  the exit code.
+
 ## 2026-10-12
 
 ### [Engine 0.104.0](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.103.0...v0.104.0)
@@ -543,6 +580,7 @@
 
 - Griptape Nodes Engine is pinned to 0.104.0. See its
   [release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.104.0).
+- The editor installed with the `editor` extra is pinned to 0.128.0.
 - `gtn` no longer prints routine startup, connection, and shutdown details, such as the
   addresses it listens on, license checks and renewals, editor connections, and worker activity.
   Errors, warnings, the reason it stopped, and a websocket reconnect after a dropped connection

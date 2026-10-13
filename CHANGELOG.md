@@ -2,6 +2,227 @@
 
 # Griptape Nodes Changelog
 
+## 2026-10-13
+
+### Editor 128
+
+#### Added
+
+- Each beta feature has thumbs up and thumbs down buttons, in the Beta Features popover in the
+  header and on Settings → "Beta Features", so you can tell us whether you like it. Your vote stays
+  selected. Click the other thumb to change it, or the same thumb to take it back. You can rate a
+  feature whether or not it's on. In the popover, the thumbs appear when you hover a feature's row.
+- A flask icon button in the header opens a beta features popover with a global on/off switch and a
+  toggle for each feature, grouped under Editor, Engine, and Libraries. The same switch and groups
+  appear in Settings → "Beta Features". Turning the global switch off disables every beta feature
+  at once and keeps your individual choices for when you turn it back on. The switch is saved to
+  your engine configuration as `beta_features.enabled`. The button shows a notification dot until
+  you open the popover for the first time.
+- The "Spend & Budgets and Usage Audit" admin beta feature adds two pages to the Admin Dashboard
+  sidebar: "Spend & Budgets", where organization admins set credit budgets for projects, license
+  keys and access groups, and "Usage Audit", which charts credit spend by project, license key,
+  access group and AI model. Turn it on from the flask button in the Admin Dashboard header. The
+  setting is saved in that browser only.
+- Deleting a secret in Settings → "API Keys & Secrets" asks for confirmation first.
+- A new or emptied canvas now shows the Griptape Nodes logo and "Press Tab to add your first node"
+  in the center. Clicking Tab in the hint opens the Add Node menu too, for when the mouse isn't over
+  the canvas. The hint goes away when you add a node and comes back if you delete them all.
+- Engine settings now show a "Reset to default" button and a dot beside the name while a value
+  differs from the engine's default. Clearing a text setting, such as "Static Server Base Url",
+  returns it to the default too. Needs an engine with `GetConfigLayersRequest`; library settings
+  don't offer a reset yet.
+- Settings → "Libraries" shows an "Environment-managed libraries" badge and a read-only library
+  list when the engine's `library.provisioned_by` is `environment`; adding, removing, downloading,
+  and updating libraries, "Library Management", and "Refresh Libraries" are unavailable.
+  With `library.sandbox_enabled` set to `true`, sandbox settings remain available and
+  "Refresh Sandbox" reloads only the sandbox library.
+- Parameter and control handles on nodes are now buttons named for their node, parameter, and
+  direction (for example "Display Image image input"), so screen readers announce them and browser
+  automation can find them.
+- Settings → "Keyboard Shortcuts" lets you change the editor's shortcuts. Click a key to replace it,
+  or "+" to add another. If the key is already taken, you can take it from the other action or
+  pick a different one. Changed shortcuts show a dot and a reset button, and "Reset all" restores
+  every default. Open the page from Settings → "Keyboard Shortcuts" in the header, the "Customize
+  shortcuts" link in the Shift+? dialog, or the `#settings-shortcuts` URL hash. Your shortcuts are
+  saved to your engine configuration under `keymap.overrides` and apply with or without the "New
+  Hotkeys" beta.
+- A "New Hotkeys" beta (Settings → "Beta Features") reworks the canvas shortcuts so single keys
+  only move the view or add nodes. With it on, Shift+F or A fits the whole workflow, C centers the
+  selection, and \` returns to the view before the last frame or center. Shift+G fits a group to
+  its nodes, F2 renames, and Cmd/Ctrl+Shift+L arranges the graph and shows a "Revert layout"
+  button afterwards.
+- When a node error includes the provider's request ID, error code, or API response, the error
+  panel keeps them under a collapsed "More info" section, with a copy button for IDs. The API
+  response, and the IDs and codes read from it, need an engine that sends structured node errors.
+- In Manage Projects, star a project to find it again with the "Favorites" filter.
+- In Manage Projects, each project's menu has "New Child Project..." and "Change Parent...", so you
+  can build and rearrange the project hierarchy without opening a project's details.
+- Light mode has a new look as the "Refined light mode" beta, on by default: a soft gray canvas,
+  white nodes with soft shadows, pale headers and notes tinted by their color, input fields with a
+  clear edge and a blue glow while focused, and lighter backdrops behind dialogs. Turn it off in
+  Settings → "Beta Features" to go back to the previous light mode. Dark mode is unchanged.
+- With the "Rich text inputs" beta on, node text fields support bold, italics, highlights, and (in
+  multi-line fields) headings, lists, and code blocks with syntax highlighting, saved as Markdown.
+  `{variable}` references are colored as you type, and hovering one shows its current value. A
+  reference to a variable that doesn't exist yet has a dashed outline, since it may only appear
+  after the workflow runs. Selecting text and clicking the toolbar's `{}` button turns it into a
+  reference, and a button in the top-right corner of a multi-line field shows its Markdown source.
+- When a Griptape Cloud budget stops a run or a chat reply, a "Run blocked" or "Reply blocked" bar
+  over the canvas names the budget and says to contact your administrator, instead of an error
+  toast. The failure is still recorded in the error history.
+- "Send feedback" in the Beta Features popover, on Settings → "Beta Features", and in the web
+  admin dashboard header opens a form that sends a message straight to the Griptape team. Clicking a
+  beta feature's thumbs down opens it for that feature. Your email is sent only if you check "You
+  can contact me if you have questions", and "Preview what's sent" shows everything that goes out.
+- The secrets, MCP servers, AI providers, "Button Customization", and "Files & Workflows" →
+  "Additional Workflows" lists in Settings are tables with a "Filter" box that narrows the list by
+  name. Click a column header such as "Name" or "Type" to sort by it. Adding or replacing an
+  additional workflow opens the file picker, and removing one asks for confirmation.
+- Searching in Settings lists each matching setting in the sidebar, grouped by section, for every
+  page. Search also finds secrets, MCP servers, AI providers, and registered or downloaded libraries
+  by name. Clicking a result opens its page, scrolls to the setting or row, and highlights it.
+  Search matches setting names and descriptions, never their values.
+- Pages in the Settings sidebar with more than one section have a chevron that lists those
+  sections under the page name. Clicking a section opens its page and scrolls to it, and the
+  sidebar highlights the section you have scrolled to.
+- With an engine that sends structured node errors, the error panel shows the fields and links the
+  node attached. A link can open a web page or a place in the editor by its URL hash, such as
+  `#settings-secrets?filter=MY_API_KEY` to add a missing API key.
+
+#### Changed
+
+- On the "Agent Settings" page, the "AI Providers" and "Personalization" sections stay visible
+  with an engine requirement note when the connected engine is too old for them.
+- With the "Compact sidebar" beta feature on, the app header now spans the full width of the editor
+  above the sidebar rail, and the Griptape logo moves from the top of the rail to the left end of
+  the header. Clicking it still opens your workflows.
+- The Engine settings page no longer lists beta feature flags. Turn them on and off from the
+  "Beta Features" page.
+- The File System settings page is now "Files & Workflows", with "Directories", "Saving", and
+  "Workflows" sections. The auto-save settings move there from the Editor page, and "Storage
+  Backend" moves there from the Engine page. "Static Files Directory" and "Synced Workflows
+  Directory" have a Browse button like "Workspace Directory".
+- The floating canvas toolbar's "Frame" button is now two buttons: "Frame Selected" zooms to the
+  selected nodes, and "Fit View" fits the whole workflow. The canvas controls have the same two
+  buttons, and the zoom percentage dropdown lists both below the presets. "Frame Selected" is
+  disabled while nothing is selected. Pressing F still frames the selection, or fits the whole
+  workflow when nothing is selected. The dropdown and the canvas control tooltips show each
+  button's shortcut.
+- Manage Projects now lists projects in a table instead of cards, with search, a status filter
+  (Active, Incompatible, Failed to load), and "Show Active Project" to scroll to the active project.
+  Click a "Failed to load" or "Incompatible" status to see why.
+- Adding and editing an MCP server in Settings → "MCP Servers" both happen in one dialog, which
+  checks the JSON configuration before saving.
+- Selecting or deselecting a node no longer re-renders every other node on the canvas, so
+  Shift-dragging a selection box across a large workflow no longer pauses when it reaches a node.
+- Long descriptions on the Engine, "Files & Workflows", "Library Settings", and "Beta Features"
+  pages in Settings show only their first sentence. A "?" button next to the setting's name opens
+  the rest, and its text can be selected and copied.
+- Every row on the Editor, Theme, Engine, "Files & Workflows", "Library Settings", and "Beta
+  Features" settings pages is the same height, with the label on the left and the control on the
+  right. Settings that depend on another one, such as "Color Nodes in Minimap" under "Show
+  Minimap", stay visible but dimmed while the parent is off instead of disappearing.
+- The "Keyboard Shortcuts" dialog (Shift+?) groups shortcuts by what they act on (Workflow, Canvas,
+  Selection, Nodes, Groups, Connections), uses three columns on wide screens, and now lists
+  Duplicate (Cmd/Ctrl+D). Shortcuts for the editor are exact: Cmd/Ctrl+S, for example, no longer
+  saves when Alt is also held.
+
+#### Removed
+
+- Settings → "Libraries" no longer shows a "Shared" / "Isolated" selector on each library. A
+  library's own dependencies now decide whether its nodes run in a separate process, so there is
+  nothing to choose. A choice saved earlier stays in your config and is ignored by the engine.
+- With the "New Hotkeys" beta on, Shift+A no longer adds a node; use Tab. Shift+G no longer
+  arranges the graph; use Cmd/Ctrl+Shift+L. Shift+F no longer fits a selected group to its nodes;
+  use Shift+G. With the beta off, all three work as before.
+
+#### Fixed
+
+- With the theme set to "System" and the system in dark mode, clean mode now draws a dark canvas
+  instead of a light gray one.
+- The insert and delete buttons that appear on connections while you hold Cmd/Ctrl no longer stay
+  on screen after a shortcut such as Cmd+Shift+4 (the macOS screenshot keys). They now show only
+  while Cmd/Ctrl is held alone and hide as soon as another key joins it.
+- Hovering a disabled button on the floating canvas toolbar, such as "Run To Selected", shows its
+  tooltip. Hovering "Frame Selected" with nothing selected says to select nodes first.
+- Dragging a node from one group into another now adds it to the new group even when the engine
+  had no record of it in the old one. Before, the node looked like part of the new group but was
+  not.
+- Clicking the "Error" badge on a failed node opens its error message until you click elsewhere or
+  press Escape. Before, it only appeared on hover and clicking hid it.
+- Creating a group from nodes that are already inside another group keeps them where they were
+  instead of shifting them by the old group's offset.
+- Resizing a group now adds and removes nodes in the engine the same way dragging them does. A
+  node the engine refuses leaves the group and shows an error, and a node left partly outside a
+  shrunken group moves clear of it. Resizing from the top or left edge now keeps the group where
+  you put it after a reload.
+- The buttons at the right end of the header no longer disappear when the header is too narrow to
+  fit them, for example with the full-width left sidebar open. The workflow title is cut off
+  instead.
+- Panning large workflows does less work per frame. The alignment guide canvas no longer redraws
+  on every pan frame when no guide is showing.
+- On Windows machines with a pen tablet or touchscreen, hovering an image parameter now shows its
+  expand and edit buttons and its dimensions, and other hover-revealed controls and highlights in
+  the editor and `@griptape-ai/nodes-manage-ui` appear again.
+- The `{` picker on Text nodes now shows a list variable's items separated by commas, so an item with
+  a space in it is no longer mistaken for two.
+- The File, Manage, Settings and Help menus in the editor header, and the menus in the code panel,
+  now highlight when you point at them, like the buttons beside them.
+- Tapping a node with a pen or drawing tablet now selects it more reliably. The editor allows a
+  wider wobble between touching down and lifting the pen before it counts as a drag.
+- Adding or editing a custom chat agent provider no longer shows "No models found" when the
+  endpoint requires an API key to list models. The selected API key secret is now sent with the
+  request, and a provider whose model list failed to load is retried instead of staying empty for
+  the rest of the session.
+- Node error messages drop Python wrapping such as `[ValueError('...')]` and labels such as
+  "Failure: ERROR:", and show the values a node echoes back, such as the input it couldn't parse,
+  as inline code.
+- The "File location" field in "Rename Workflow" and "Workflow Details" now edits only the file
+  name, with its folder (relative to the workspace when it is inside it) and `.py` shown
+  alongside. Changes to the folder there were silently ignored, since renaming keeps a workflow
+  in its folder.
+- Renaming a workflow that lives in a subfolder no longer adds the folder name to the new file
+  name. Renaming `sub/x` to "New Name" now gives `sub/new_name.py` instead of
+  `sub/sub_new_name.py`.
+- Clicking into a node's rich text field now selects the node, as clicking its other fields does.
+- Clearing a number field on the Editor or "Library Settings" page, such as "Auto-Save Interval
+  (seconds)", no longer saves 0. An empty or out-of-range value shows an error next to the field and
+  reverts when you leave it.
+- Shift-clicking a second node, including on one of its text fields or parameters, now adds it to
+  the selection instead of sometimes deselecting the other nodes. This was most frequent when
+  zoomed out. Shift-dragging that starts on a node no longer draws a selection box. Shift-dragging
+  from empty canvas still does.
+- Shift-dragging a selection box on the canvas now adds to the nodes already selected instead of
+  deselecting them first.
+- The Keyboard Shortcuts dialog no longer lists "Left sidebar" (`Shift+Cmd/Ctrl+B`) when the
+  "Compact sidebar" beta feature is on, since the compact sidebar cannot be toggled.
+- A Start Flow parameter added by dragging a connection onto its add-parameter handle starts with
+  the value the connected input showed, so published workflows no longer get a blank default for it.
+- Text in the error tooltip on a failed node and in library-update tooltips is now readable in both
+  light and dark mode. Before, it rendered in a color close to the tooltip background.
+- Int, float, and bool defaults set when adding or configuring a parameter are now saved as numbers
+  and booleans instead of text, so a saved workflow no longer passes `"5"` to nodes expecting `5`,
+  and a `false` default no longer reads as on.
+- Ungrouping or deleting a group now keeps its nodes where they were after a reload, instead of
+  moving them by the group's offset. Deleting a collapsed group no longer leaves its nodes hidden.
+  If the engine refuses to delete the group, the group and its nodes come back and an error shows,
+  instead of the group disappearing until the next reload.
+- When the engine restarts while an unsaved workflow is open, the editor now shows an "Unsaved
+  workflow couldn't be restored" warning instead of two "Failed to get workflow ... from registry"
+  errors.
+- Saving or switching projects no longer fails after the editor reconnects to a workflow that was never saved.
+- Ctrl+Enter runs the script in the Workflow Script Editor on Windows and Linux. Before, only
+  Cmd+Enter worked. Running the script no longer also runs the node selected on the canvas.
+- With the "Individual node toolbars in multi-select" beta on and the canvas zoomed out, a Note's or
+  Group's toolbar no longer fades out while its color, opacity, or text options panel is open.
+
+#### Security
+
+- Searching on the "API Keys & Secrets" settings page matches secret names only. It used to match
+  secret values too, so typing a guess could reveal whether any secret contained it.
+- Parameters whose name matches a styling class, such as `invert` or `hidden`, no longer render
+  inverted or disappear from the node.
+
 ## 2026-10-12
 
 ### [Engine 0.104.0](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.103.0...v0.104.0)

@@ -8,6 +8,306 @@
   ],
   "releases": [
     {
+      "id": "editor@128",
+      "component": "Editor",
+      "version": "128",
+      "date": "2026-10-13",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Added",
+          "entries": [
+            {
+              "text": "Each beta feature has thumbs up and thumbs down buttons, in the Beta Features popover in the\nheader and on Settings → \"Beta Features\", so you can tell us whether you like it. Your vote stays\nselected. Click the other thumb to change it, or the same thumb to take it back. You can rate a\nfeature whether or not it's on. In the popover, the thumbs appear when you hover a feature's row.",
+              "breaking": false
+            },
+            {
+              "text": "A flask icon button in the header opens a beta features popover with a global on/off switch and a\ntoggle for each feature, grouped under Editor, Engine, and Libraries. The same switch and groups\nappear in Settings → \"Beta Features\". Turning the global switch off disables every beta feature\nat once and keeps your individual choices for when you turn it back on. The switch is saved to\nyour engine configuration as `beta_features.enabled`. The button shows a notification dot until\nyou open the popover for the first time.",
+              "breaking": false
+            },
+            {
+              "text": "The \"Spend & Budgets and Usage Audit\" admin beta feature adds two pages to the Admin Dashboard\nsidebar: \"Spend & Budgets\", where organization admins set credit budgets for projects, license\nkeys and access groups, and \"Usage Audit\", which charts credit spend by project, license key,\naccess group and AI model. Turn it on from the flask button in the Admin Dashboard header. The\nsetting is saved in that browser only.",
+              "breaking": false
+            },
+            {
+              "text": "Deleting a secret in Settings → \"API Keys & Secrets\" asks for confirmation first.",
+              "breaking": false
+            },
+            {
+              "text": "A new or emptied canvas now shows the Griptape Nodes logo and \"Press Tab to add your first node\"\nin the center. Clicking Tab in the hint opens the Add Node menu too, for when the mouse isn't over\nthe canvas. The hint goes away when you add a node and comes back if you delete them all.",
+              "breaking": false
+            },
+            {
+              "text": "Engine settings now show a \"Reset to default\" button and a dot beside the name while a value\ndiffers from the engine's default. Clearing a text setting, such as \"Static Server Base Url\",\nreturns it to the default too. Needs an engine with `GetConfigLayersRequest`; library settings\ndon't offer a reset yet.",
+              "breaking": false
+            },
+            {
+              "text": "Settings → \"Libraries\" shows an \"Environment-managed libraries\" badge and a read-only library\nlist when the engine's `library.provisioned_by` is `environment`; adding, removing, downloading,\nand updating libraries, \"Library Management\", and \"Refresh Libraries\" are unavailable.\nWith `library.sandbox_enabled` set to `true`, sandbox settings remain available and\n\"Refresh Sandbox\" reloads only the sandbox library.",
+              "breaking": false
+            },
+            {
+              "text": "Parameter and control handles on nodes are now buttons named for their node, parameter, and\ndirection (for example \"Display Image image input\"), so screen readers announce them and browser\nautomation can find them.",
+              "breaking": false
+            },
+            {
+              "text": "Settings → \"Keyboard Shortcuts\" lets you change the editor's shortcuts. Click a key to replace it,\nor \"+\" to add another. If the key is already taken, you can take it from the other action or\npick a different one. Changed shortcuts show a dot and a reset button, and \"Reset all\" restores\nevery default. Open the page from Settings → \"Keyboard Shortcuts\" in the header, the \"Customize\nshortcuts\" link in the Shift+? dialog, or the `#settings-shortcuts` URL hash. Your shortcuts are\nsaved to your engine configuration under `keymap.overrides` and apply with or without the \"New\nHotkeys\" beta.",
+              "breaking": false
+            },
+            {
+              "text": "A \"New Hotkeys\" beta (Settings → \"Beta Features\") reworks the canvas shortcuts so single keys\nonly move the view or add nodes. With it on, Shift+F or A fits the whole workflow, C centers the\nselection, and \\` returns to the view before the last frame or center. Shift+G fits a group to\nits nodes, F2 renames, and Cmd/Ctrl+Shift+L arranges the graph and shows a \"Revert layout\"\nbutton afterwards.",
+              "breaking": false
+            },
+            {
+              "text": "When a node error includes the provider's request ID, error code, or API response, the error\npanel keeps them under a collapsed \"More info\" section, with a copy button for IDs. The API\nresponse, and the IDs and codes read from it, need an engine that sends structured node errors.",
+              "breaking": false
+            },
+            {
+              "text": "In Manage Projects, star a project to find it again with the \"Favorites\" filter.",
+              "breaking": false
+            },
+            {
+              "text": "In Manage Projects, each project's menu has \"New Child Project...\" and \"Change Parent...\", so you\ncan build and rearrange the project hierarchy without opening a project's details.",
+              "breaking": false
+            },
+            {
+              "text": "Light mode has a new look as the \"Refined light mode\" beta, on by default: a soft gray canvas,\nwhite nodes with soft shadows, pale headers and notes tinted by their color, input fields with a\nclear edge and a blue glow while focused, and lighter backdrops behind dialogs. Turn it off in\nSettings → \"Beta Features\" to go back to the previous light mode. Dark mode is unchanged.",
+              "breaking": false
+            },
+            {
+              "text": "With the \"Rich text inputs\" beta on, node text fields support bold, italics, highlights, and (in\nmulti-line fields) headings, lists, and code blocks with syntax highlighting, saved as Markdown.\n`{variable}` references are colored as you type, and hovering one shows its current value. A\nreference to a variable that doesn't exist yet has a dashed outline, since it may only appear\nafter the workflow runs. Selecting text and clicking the toolbar's `{}` button turns it into a\nreference, and a button in the top-right corner of a multi-line field shows its Markdown source.",
+              "breaking": false
+            },
+            {
+              "text": "When a Griptape Cloud budget stops a run or a chat reply, a \"Run blocked\" or \"Reply blocked\" bar\nover the canvas names the budget and says to contact your administrator, instead of an error\ntoast. The failure is still recorded in the error history.",
+              "breaking": false
+            },
+            {
+              "text": "\"Send feedback\" in the Beta Features popover, on Settings → \"Beta Features\", and in the web\nadmin dashboard header opens a form that sends a message straight to the Griptape team. Clicking a\nbeta feature's thumbs down opens it for that feature. Your email is sent only if you check \"You\ncan contact me if you have questions\", and \"Preview what's sent\" shows everything that goes out.",
+              "breaking": false
+            },
+            {
+              "text": "The secrets, MCP servers, AI providers, \"Button Customization\", and \"Files & Workflows\" →\n\"Additional Workflows\" lists in Settings are tables with a \"Filter\" box that narrows the list by\nname. Click a column header such as \"Name\" or \"Type\" to sort by it. Adding or replacing an\nadditional workflow opens the file picker, and removing one asks for confirmation.",
+              "breaking": false
+            },
+            {
+              "text": "Searching in Settings lists each matching setting in the sidebar, grouped by section, for every\npage. Search also finds secrets, MCP servers, AI providers, and registered or downloaded libraries\nby name. Clicking a result opens its page, scrolls to the setting or row, and highlights it.\nSearch matches setting names and descriptions, never their values.",
+              "breaking": false
+            },
+            {
+              "text": "Pages in the Settings sidebar with more than one section have a chevron that lists those\nsections under the page name. Clicking a section opens its page and scrolls to it, and the\nsidebar highlights the section you have scrolled to.",
+              "breaking": false
+            },
+            {
+              "text": "With an engine that sends structured node errors, the error panel shows the fields and links the\nnode attached. A link can open a web page or a place in the editor by its URL hash, such as\n`#settings-secrets?filter=MY_API_KEY` to add a missing API key.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "On the \"Agent Settings\" page, the \"AI Providers\" and \"Personalization\" sections stay visible\nwith an engine requirement note when the connected engine is too old for them.",
+              "breaking": false
+            },
+            {
+              "text": "With the \"Compact sidebar\" beta feature on, the app header now spans the full width of the editor\nabove the sidebar rail, and the Griptape logo moves from the top of the rail to the left end of\nthe header. Clicking it still opens your workflows.",
+              "breaking": false
+            },
+            {
+              "text": "The Engine settings page no longer lists beta feature flags. Turn them on and off from the\n\"Beta Features\" page.",
+              "breaking": false
+            },
+            {
+              "text": "The File System settings page is now \"Files & Workflows\", with \"Directories\", \"Saving\", and\n\"Workflows\" sections. The auto-save settings move there from the Editor page, and \"Storage\nBackend\" moves there from the Engine page. \"Static Files Directory\" and \"Synced Workflows\nDirectory\" have a Browse button like \"Workspace Directory\".",
+              "breaking": false
+            },
+            {
+              "text": "The floating canvas toolbar's \"Frame\" button is now two buttons: \"Frame Selected\" zooms to the\nselected nodes, and \"Fit View\" fits the whole workflow. The canvas controls have the same two\nbuttons, and the zoom percentage dropdown lists both below the presets. \"Frame Selected\" is\ndisabled while nothing is selected. Pressing F still frames the selection, or fits the whole\nworkflow when nothing is selected. The dropdown and the canvas control tooltips show each\nbutton's shortcut.",
+              "breaking": false
+            },
+            {
+              "text": "Manage Projects now lists projects in a table instead of cards, with search, a status filter\n(Active, Incompatible, Failed to load), and \"Show Active Project\" to scroll to the active project.\nClick a \"Failed to load\" or \"Incompatible\" status to see why.",
+              "breaking": false
+            },
+            {
+              "text": "Adding and editing an MCP server in Settings → \"MCP Servers\" both happen in one dialog, which\nchecks the JSON configuration before saving.",
+              "breaking": false
+            },
+            {
+              "text": "Selecting or deselecting a node no longer re-renders every other node on the canvas, so\nShift-dragging a selection box across a large workflow no longer pauses when it reaches a node.",
+              "breaking": false
+            },
+            {
+              "text": "Long descriptions on the Engine, \"Files & Workflows\", \"Library Settings\", and \"Beta Features\"\npages in Settings show only their first sentence. A \"?\" button next to the setting's name opens\nthe rest, and its text can be selected and copied.",
+              "breaking": false
+            },
+            {
+              "text": "Every row on the Editor, Theme, Engine, \"Files & Workflows\", \"Library Settings\", and \"Beta\nFeatures\" settings pages is the same height, with the label on the left and the control on the\nright. Settings that depend on another one, such as \"Color Nodes in Minimap\" under \"Show\nMinimap\", stay visible but dimmed while the parent is off instead of disappearing.",
+              "breaking": false
+            },
+            {
+              "text": "The \"Keyboard Shortcuts\" dialog (Shift+?) groups shortcuts by what they act on (Workflow, Canvas,\nSelection, Nodes, Groups, Connections), uses three columns on wide screens, and now lists\nDuplicate (Cmd/Ctrl+D). Shortcuts for the editor are exact: Cmd/Ctrl+S, for example, no longer\nsaves when Alt is also held.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Removed",
+          "entries": [
+            {
+              "text": "Settings → \"Libraries\" no longer shows a \"Shared\" / \"Isolated\" selector on each library. A\nlibrary's own dependencies now decide whether its nodes run in a separate process, so there is\nnothing to choose. A choice saved earlier stays in your config and is ignored by the engine.",
+              "breaking": false
+            },
+            {
+              "text": "With the \"New Hotkeys\" beta on, Shift+A no longer adds a node; use Tab. Shift+G no longer\narranges the graph; use Cmd/Ctrl+Shift+L. Shift+F no longer fits a selected group to its nodes;\nuse Shift+G. With the beta off, all three work as before.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "With the theme set to \"System\" and the system in dark mode, clean mode now draws a dark canvas\ninstead of a light gray one.",
+              "breaking": false
+            },
+            {
+              "text": "The insert and delete buttons that appear on connections while you hold Cmd/Ctrl no longer stay\non screen after a shortcut such as Cmd+Shift+4 (the macOS screenshot keys). They now show only\nwhile Cmd/Ctrl is held alone and hide as soon as another key joins it.",
+              "breaking": false
+            },
+            {
+              "text": "Hovering a disabled button on the floating canvas toolbar, such as \"Run To Selected\", shows its\ntooltip. Hovering \"Frame Selected\" with nothing selected says to select nodes first.",
+              "breaking": false
+            },
+            {
+              "text": "Dragging a node from one group into another now adds it to the new group even when the engine\nhad no record of it in the old one. Before, the node looked like part of the new group but was\nnot.",
+              "breaking": false
+            },
+            {
+              "text": "Clicking the \"Error\" badge on a failed node opens its error message until you click elsewhere or\npress Escape. Before, it only appeared on hover and clicking hid it.",
+              "breaking": false
+            },
+            {
+              "text": "Creating a group from nodes that are already inside another group keeps them where they were\ninstead of shifting them by the old group's offset.",
+              "breaking": false
+            },
+            {
+              "text": "Resizing a group now adds and removes nodes in the engine the same way dragging them does. A\nnode the engine refuses leaves the group and shows an error, and a node left partly outside a\nshrunken group moves clear of it. Resizing from the top or left edge now keeps the group where\nyou put it after a reload.",
+              "breaking": false
+            },
+            {
+              "text": "The buttons at the right end of the header no longer disappear when the header is too narrow to\nfit them, for example with the full-width left sidebar open. The workflow title is cut off\ninstead.",
+              "breaking": false
+            },
+            {
+              "text": "Panning large workflows does less work per frame. The alignment guide canvas no longer redraws\non every pan frame when no guide is showing.",
+              "breaking": false
+            },
+            {
+              "text": "On Windows machines with a pen tablet or touchscreen, hovering an image parameter now shows its\nexpand and edit buttons and its dimensions, and other hover-revealed controls and highlights in\nthe editor and `@griptape-ai/nodes-manage-ui` appear again.",
+              "breaking": false
+            },
+            {
+              "text": "The `{` picker on Text nodes now shows a list variable's items separated by commas, so an item with\na space in it is no longer mistaken for two.",
+              "breaking": false
+            },
+            {
+              "text": "The File, Manage, Settings and Help menus in the editor header, and the menus in the code panel,\nnow highlight when you point at them, like the buttons beside them.",
+              "breaking": false
+            },
+            {
+              "text": "Tapping a node with a pen or drawing tablet now selects it more reliably. The editor allows a\nwider wobble between touching down and lifting the pen before it counts as a drag.",
+              "breaking": false
+            },
+            {
+              "text": "Adding or editing a custom chat agent provider no longer shows \"No models found\" when the\nendpoint requires an API key to list models. The selected API key secret is now sent with the\nrequest, and a provider whose model list failed to load is retried instead of staying empty for\nthe rest of the session.",
+              "breaking": false
+            },
+            {
+              "text": "Node error messages drop Python wrapping such as `[ValueError('...')]` and labels such as\n\"Failure: ERROR:\", and show the values a node echoes back, such as the input it couldn't parse,\nas inline code.",
+              "breaking": false
+            },
+            {
+              "text": "The \"File location\" field in \"Rename Workflow\" and \"Workflow Details\" now edits only the file\nname, with its folder (relative to the workspace when it is inside it) and `.py` shown\nalongside. Changes to the folder there were silently ignored, since renaming keeps a workflow\nin its folder.",
+              "breaking": false
+            },
+            {
+              "text": "Renaming a workflow that lives in a subfolder no longer adds the folder name to the new file\nname. Renaming `sub/x` to \"New Name\" now gives `sub/new_name.py` instead of\n`sub/sub_new_name.py`.",
+              "breaking": false
+            },
+            {
+              "text": "Clicking into a node's rich text field now selects the node, as clicking its other fields does.",
+              "breaking": false
+            },
+            {
+              "text": "Clearing a number field on the Editor or \"Library Settings\" page, such as \"Auto-Save Interval\n(seconds)\", no longer saves 0. An empty or out-of-range value shows an error next to the field and\nreverts when you leave it.",
+              "breaking": false
+            },
+            {
+              "text": "Shift-clicking a second node, including on one of its text fields or parameters, now adds it to\nthe selection instead of sometimes deselecting the other nodes. This was most frequent when\nzoomed out. Shift-dragging that starts on a node no longer draws a selection box. Shift-dragging\nfrom empty canvas still does.",
+              "breaking": false
+            },
+            {
+              "text": "Shift-dragging a selection box on the canvas now adds to the nodes already selected instead of\ndeselecting them first.",
+              "breaking": false
+            },
+            {
+              "text": "The Keyboard Shortcuts dialog no longer lists \"Left sidebar\" (`Shift+Cmd/Ctrl+B`) when the\n\"Compact sidebar\" beta feature is on, since the compact sidebar cannot be toggled.",
+              "breaking": false
+            },
+            {
+              "text": "A Start Flow parameter added by dragging a connection onto its add-parameter handle starts with\nthe value the connected input showed, so published workflows no longer get a blank default for it.",
+              "breaking": false
+            },
+            {
+              "text": "Text in the error tooltip on a failed node and in library-update tooltips is now readable in both\nlight and dark mode. Before, it rendered in a color close to the tooltip background.",
+              "breaking": false
+            },
+            {
+              "text": "Int, float, and bool defaults set when adding or configuring a parameter are now saved as numbers\nand booleans instead of text, so a saved workflow no longer passes `\"5\"` to nodes expecting `5`,\nand a `false` default no longer reads as on.",
+              "breaking": false
+            },
+            {
+              "text": "Ungrouping or deleting a group now keeps its nodes where they were after a reload, instead of\nmoving them by the group's offset. Deleting a collapsed group no longer leaves its nodes hidden.\nIf the engine refuses to delete the group, the group and its nodes come back and an error shows,\ninstead of the group disappearing until the next reload.",
+              "breaking": false
+            },
+            {
+              "text": "When the engine restarts while an unsaved workflow is open, the editor now shows an \"Unsaved\nworkflow couldn't be restored\" warning instead of two \"Failed to get workflow ... from registry\"\nerrors.",
+              "breaking": false
+            },
+            {
+              "text": "Saving or switching projects no longer fails after the editor reconnects to a workflow that was never saved.",
+              "breaking": false
+            },
+            {
+              "text": "Ctrl+Enter runs the script in the Workflow Script Editor on Windows and Linux. Before, only\nCmd+Enter worked. Running the script no longer also runs the node selected on the canvas.",
+              "breaking": false
+            },
+            {
+              "text": "With the \"Individual node toolbars in multi-select\" beta on and the canvas zoomed out, a Note's or\nGroup's toolbar no longer fades out while its color, opacity, or text options panel is open.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Security",
+          "entries": [
+            {
+              "text": "Searching on the \"API Keys & Secrets\" settings page matches secret names only. It used to match\nsecret values too, so typing a guess could reveal whether any secret contained it.",
+              "breaking": false
+            },
+            {
+              "text": "Parameters whose name matches a styling class, such as `invert` or `hidden`, no longer render\ninverted or disappear from the node.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "engine@0.104.0",
       "component": "Engine",
       "version": "0.104.0",

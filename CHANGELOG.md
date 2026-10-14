@@ -603,12 +603,6 @@
 - A request whose result holds a value with no JSON form now gets a failure naming that value,
   instead of no reply and a timeout. Other events holding such a value are logged and not sent,
   rather than sent with the value turned into text.
-- With `websocket_direct` as the transport, such as the desktop app's direct mode, a node that
-  runs in a library's worker process now shows its progress bar, logs, and previews in the editor
-  while it runs, instead of only its final values once it finishes.
-- A node that runs in a library's worker process no longer flickers in the editor while it runs.
-  The worker no longer sends the editor changes to its own copy of the node, which made the editor
-  reload the node and drop the values shown so far.
 
 ## 2026-09-30
 

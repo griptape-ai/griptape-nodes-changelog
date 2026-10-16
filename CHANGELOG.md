@@ -259,6 +259,8 @@
   keep using the license until it's cleared.
 - When the engine fails to start, the engine log keeps its error output instead of showing only
   the exit code.
+- When the operating system blocks camera or microphone access, the app now asks for it on macOS,
+  and otherwise says which privacy setting to change, with a button that opens it.
 
 ## 2026-10-12
 

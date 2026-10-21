@@ -8,6 +8,184 @@
   ],
   "releases": [
     {
+      "id": "engine@0.104.2",
+      "component": "Engine",
+      "version": "0.104.2",
+      "date": "2026-10-20",
+      "yanked": false,
+      "url": "https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.104.1...v0.104.2",
+      "summary": null,
+      "changes": [
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "The agent chat on Windows no longer fails on every message with \"`LocalWorkspaceBackend` only\nsupports POSIX platforms\" when the workspace has an `.agents/skills` folder. If a platform\ncannot load skills, the chat now answers without them instead of failing.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "app@0.101.3",
+      "component": "App",
+      "version": "0.101.3",
+      "date": "2026-10-20",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "Griptape Nodes Engine is pinned to 0.104.2. See its\n[release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.104.2).",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desktop@0.28.2",
+      "component": "Desktop",
+      "version": "0.28.2",
+      "date": "2026-10-20",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "The bundled version of the Griptape Nodes app has been updated to `0.101.3`, with engine `0.104.2` and editor `0.128.1`.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "On Windows, the agent chat no longer fails on every message when the workspace has an `.agents/skills` folder.",
+              "breaking": false
+            },
+            {
+              "text": "In dark mode, the Direct and Cloud options in the Engine menu are readable.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "engine@0.104.1",
+      "component": "Engine",
+      "version": "0.104.1",
+      "date": "2026-10-13",
+      "yanked": false,
+      "url": "https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.104.0...v0.104.1",
+      "summary": null,
+      "changes": [
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "Unlocking a node that was locked before it ever ran now lets the next downstream run execute it.\nA run passing through a locked node marks it resolved without running it, and that state used\nto outlive the unlock, so the node was skipped until it was run directly.\n[#5766](https://github.com/griptape-ai/griptape-nodes-engine/issues/5766)",
+              "breaking": false
+            },
+            {
+              "text": "The editor no longer shows a \"GetConfigValue Failed\" popup for `library.sandbox_enabled` at\nlaunch or on refresh. `GetConfigValueRequest` now succeeds with an empty value for a setting\nthat is unset by default, and fails only for a key that names no setting.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "app@0.101.2",
+      "component": "App",
+      "version": "0.101.2",
+      "date": "2026-10-13",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "Griptape Nodes Engine is pinned to 0.104.1. See its\n[release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.104.1).",
+              "breaking": false
+            },
+            {
+              "text": "The editor installed with the `editor` extra is pinned to 0.128.1.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "With `websocket_direct` as the transport, such as the desktop app's direct mode, a node that\nruns in a library's worker process now shows its progress bar, logs, and previews in the editor\nwhile it runs, instead of only its final values once it finishes.",
+              "breaking": false
+            },
+            {
+              "text": "A node that runs in a library's worker process no longer flickers in the editor while it runs.\nThe worker no longer sends the editor changes to its own copy of the node, which made the editor\nreload the node and drop the values shown so far.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "app@0.101.1",
+      "component": "App",
+      "version": "0.101.1",
+      "date": "2026-10-13",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "The editor installed with the `editor` extra is pinned to 0.128.0.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "editor@128.1",
+      "component": "Editor",
+      "version": "128.1",
+      "date": "2026-10-13",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "In light mode, the \"Cancel\" and primary buttons in the Admin create and edit dialogs for license\nkeys and access groups are now readable instead of near-white on the light dialog background.",
+              "breaking": false
+            },
+            {
+              "text": "A hidden image or video parameter (`hide_property`) no longer leaves about 200px of empty space\nin a newly placed node.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "editor@128",
       "component": "Editor",
       "version": "128",
@@ -301,6 +479,51 @@
             },
             {
               "text": "Parameters whose name matches a styling class, such as `invert` or `hidden`, no longer render\ninverted or disappear from the node.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desktop@0.28.1",
+      "component": "Desktop",
+      "version": "0.28.1",
+      "date": "2026-10-13",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "The bundled version of the Griptape Nodes app has been updated to `0.101.2`, with engine `0.104.1` and editor `0.128.1`.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "Nodes that run in a library's worker process now show their progress bar, logs, and previews while they run, instead of only their final values, and no longer flicker.",
+              "breaking": false
+            },
+            {
+              "text": "Unlocking a node that was locked before it ever ran now lets the next run execute it.",
+              "breaking": false
+            },
+            {
+              "text": "The editor no longer shows a \"GetConfigValue Failed\" popup at launch or on refresh.",
+              "breaking": false
+            },
+            {
+              "text": "A hidden image or video parameter no longer leaves empty space in a newly placed node.",
+              "breaking": false
+            },
+            {
+              "text": "In light mode, the buttons in the Admin dialogs for license keys and access groups are readable.",
               "breaking": false
             }
           ]

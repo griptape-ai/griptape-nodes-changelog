@@ -2,7 +2,79 @@
 
 # Griptape Nodes Changelog
 
+## 2026-10-20
+
+### [Engine 0.104.2](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.104.1...v0.104.2)
+
+#### Fixed
+
+- The agent chat on Windows no longer fails on every message with "`LocalWorkspaceBackend` only
+  supports POSIX platforms" when the workspace has an `.agents/skills` folder. If a platform
+  cannot load skills, the chat now answers without them instead of failing.
+
+### App 0.101.3
+
+#### Changed
+
+- Griptape Nodes Engine is pinned to 0.104.2. See its
+  [release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.104.2).
+
+### Desktop 0.28.2
+
+#### Changed
+
+- The bundled version of the Griptape Nodes app has been updated to `0.101.3`, with engine `0.104.2` and editor `0.128.1`.
+
+#### Fixed
+
+- On Windows, the agent chat no longer fails on every message when the workspace has an `.agents/skills` folder.
+- In dark mode, the Direct and Cloud options in the Engine menu are readable.
+
 ## 2026-10-13
+
+### [Engine 0.104.1](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.104.0...v0.104.1)
+
+#### Fixed
+
+- Unlocking a node that was locked before it ever ran now lets the next downstream run execute it.
+  A run passing through a locked node marks it resolved without running it, and that state used
+  to outlive the unlock, so the node was skipped until it was run directly.
+  [#5766](https://github.com/griptape-ai/griptape-nodes-engine/issues/5766)
+- The editor no longer shows a "GetConfigValue Failed" popup for `library.sandbox_enabled` at
+  launch or on refresh. `GetConfigValueRequest` now succeeds with an empty value for a setting
+  that is unset by default, and fails only for a key that names no setting.
+
+### App 0.101.2
+
+#### Changed
+
+- Griptape Nodes Engine is pinned to 0.104.1. See its
+  [release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.104.1).
+- The editor installed with the `editor` extra is pinned to 0.128.1.
+
+#### Fixed
+
+- With `websocket_direct` as the transport, such as the desktop app's direct mode, a node that
+  runs in a library's worker process now shows its progress bar, logs, and previews in the editor
+  while it runs, instead of only its final values once it finishes.
+- A node that runs in a library's worker process no longer flickers in the editor while it runs.
+  The worker no longer sends the editor changes to its own copy of the node, which made the editor
+  reload the node and drop the values shown so far.
+
+### App 0.101.1
+
+#### Changed
+
+- The editor installed with the `editor` extra is pinned to 0.128.0.
+
+### Editor 128.1
+
+#### Fixed
+
+- In light mode, the "Cancel" and primary buttons in the Admin create and edit dialogs for license
+  keys and access groups are now readable instead of near-white on the light dialog background.
+- A hidden image or video parameter (`hide_property`) no longer leaves about 200px of empty space
+  in a newly placed node.
 
 ### Editor 128
 
@@ -222,6 +294,20 @@
   secret values too, so typing a guess could reveal whether any secret contained it.
 - Parameters whose name matches a styling class, such as `invert` or `hidden`, no longer render
   inverted or disappear from the node.
+
+### Desktop 0.28.1
+
+#### Changed
+
+- The bundled version of the Griptape Nodes app has been updated to `0.101.2`, with engine `0.104.1` and editor `0.128.1`.
+
+#### Fixed
+
+- Nodes that run in a library's worker process now show their progress bar, logs, and previews while they run, instead of only their final values, and no longer flicker.
+- Unlocking a node that was locked before it ever ran now lets the next run execute it.
+- The editor no longer shows a "GetConfigValue Failed" popup at launch or on refresh.
+- A hidden image or video parameter no longer leaves empty space in a newly placed node.
+- In light mode, the buttons in the Admin dialogs for license keys and access groups are readable.
 
 ### Desktop 0.28.0
 

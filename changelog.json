@@ -69,6 +69,10 @@
           "type": "Fixed",
           "entries": [
             {
+              "text": "Python modules in folders on `PYTHONPATH` when the app launches can now be imported from nodes. They are searched after the app's own packages, so they can't break the engine.",
+              "breaking": false
+            },
+            {
               "text": "On Windows, the agent chat no longer fails on every message when the workspace has an `.agents/skills` folder.",
               "breaking": false
             },

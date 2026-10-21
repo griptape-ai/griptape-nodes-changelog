@@ -27,6 +27,7 @@
 
 #### Fixed
 
+- Python modules in folders on `PYTHONPATH` when the app launches can now be imported from nodes. They are searched after the app's own packages, so they can't break the engine.
 - On Windows, the agent chat no longer fails on every message when the workspace has an `.agents/skills` folder.
 - In dark mode, the Direct and Cloud options in the Engine menu are readable.
 

@@ -523,6 +523,10 @@
               "breaking": false
             },
             {
+              "text": "The engine panel opened from the editor's \"Manage Engines\" button closes when you click back into the editor.",
+              "breaking": false
+            },
+            {
               "text": "In light mode, the buttons in the Admin dialogs for license keys and access groups are readable.",
               "breaking": false
             }

@@ -307,6 +307,7 @@
 - Unlocking a node that was locked before it ever ran now lets the next run execute it.
 - The editor no longer shows a "GetConfigValue Failed" popup at launch or on refresh.
 - A hidden image or video parameter no longer leaves empty space in a newly placed node.
+- The engine panel opened from the editor's "Manage Engines" button closes when you click back into the editor.
 - In light mode, the buttons in the Admin dialogs for license keys and access groups are readable.
 
 ### Desktop 0.28.0

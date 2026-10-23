@@ -261,6 +261,9 @@
 - Clearing a number field on the Editor or "Library Settings" page, such as "Auto-Save Interval
   (seconds)", no longer saves 0. An empty or out-of-range value shows an error next to the field and
   reverts when you leave it.
+- The row action buttons on the Admin Dashboard's "License Keys" and "Access Groups" pages, and
+  the delete buttons in the API keys and sessions dialogs, now highlight on hover. Delete and
+  revoke get a red tint.
 - Shift-clicking a second node, including on one of its text fields or parameters, now adds it to
   the selection instead of sometimes deselecting the other nodes. This was most frequent when
   zoomed out. Shift-dragging that starts on a node no longer draws a selection box. Shift-dragging

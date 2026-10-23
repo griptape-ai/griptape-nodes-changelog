@@ -429,6 +429,10 @@
               "breaking": false
             },
             {
+              "text": "The row action buttons on the Admin Dashboard's \"License Keys\" and \"Access Groups\" pages, and\nthe delete buttons in the API keys and sessions dialogs, now highlight on hover. Delete and\nrevoke get a red tint.",
+              "breaking": false
+            },
+            {
               "text": "Shift-clicking a second node, including on one of its text fields or parameters, now adds it to\nthe selection instead of sometimes deselecting the other nodes. This was most frequent when\nzoomed out. Shift-dragging that starts on a node no longer draws a selection box. Shift-dragging\nfrom empty canvas still does.",
               "breaking": false
             },

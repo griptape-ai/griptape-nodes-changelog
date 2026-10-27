@@ -384,6 +384,43 @@
       ]
     },
     {
+      "id": "desktop@0.29.0",
+      "component": "Desktop",
+      "version": "0.29.0",
+      "date": "2026-10-27",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "The bundled version of the Griptape Nodes app has been updated to `0.102.0`, with engine `0.105.0` and editor `0.129.0`.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "When the engine fails to start because its bundled Python packages were changed outside the app (for example by `pip install`), the engine log now lists the changed packages and how to restore them.",
+              "breaking": false
+            },
+            {
+              "text": "The editor no longer shows a second engine picker next to the app's own engine controls.",
+              "breaking": false
+            },
+            {
+              "text": "**Try again** on \"Can't reach your engine\" now reconnects when the first connection timed out while the engine was still loading, instead of doing nothing until the app restarted.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "engine@0.104.2",
       "component": "Engine",
       "version": "0.104.2",

@@ -290,6 +290,18 @@
 - Switching projects from the Load Workflow modal while a workflow is open no longer shows a
   `GetWorkflowMetadata Failed` or `Failed to open` error for the previous project's workflow.
 
+### Desktop 0.29.0
+
+#### Changed
+
+- The bundled version of the Griptape Nodes app has been updated to `0.102.0`, with engine `0.105.0` and editor `0.129.0`.
+
+#### Fixed
+
+- When the engine fails to start because its bundled Python packages were changed outside the app (for example by `pip install`), the engine log now lists the changed packages and how to restore them.
+- The editor no longer shows a second engine picker next to the app's own engine controls.
+- **Try again** on "Can't reach your engine" now reconnects when the first connection timed out while the engine was still loading, instead of doing nothing until the app restarted.
+
 ## 2026-10-20
 
 ### [Engine 0.104.2](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.104.1...v0.104.2)

@@ -204,6 +204,58 @@
   nodes, are now listed under their library as soon as the library loads. Before, they appeared
   only after the node was placed, and a workspace change removed them again.
 
+### App 0.102.0
+
+#### Added
+
+- The engine registry record carries `clients`, the clients listed on the engine's session, so a
+  discovery client can tell a free engine from one another host is already driving.
+- Setting `transports.http_direct.enabled` to `true` makes the engine accept requests POSTed to
+  `/` or `/events` on `127.0.0.1:18126`, answered with `202 Accepted`. Browser pages can call it
+  from the Griptape Nodes editors and from origins listed in
+  `transports.http_direct.allowed_origins`.
+- Each `provenance` entry in a permission denial now carries `authority`, the evaluation authority
+  the cloud stamped on the policy, plus `is_service_policy`, true for a Griptape platform policy
+  the organization cannot remove, and `is_org_attached`, true for a Griptape managed policy an
+  organization administrator attached and can detach.
+
+#### Changed
+
+- Griptape Nodes Engine is pinned to 0.105.0. See its
+  [release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.105.0).
+- The editor installed with the `editor` extra is pinned to 0.129.0.
+- With a license, opening a connection to any transport no longer contacts the license server
+  while the license session is live. A released seat or an updated license policy now takes effect
+  at the next session renewal, within a few minutes, instead of on the next connection.
+
+#### Fixed
+
+- An editor connected through Griptape Cloud now shows the progress bar, logs, and previews of a
+  node running in a library's worker process while it runs, instead of only its final values,
+  when the engine also serves `websocket_direct`.
+- `griptape-nodes` now installs on Python 3.13. Each platform ships one wheel built on Python's
+  stable ABI, which loads on 3.12 and 3.13, instead of a wheel that loads on 3.12 only.
+- A request the engine cannot read, such as one whose type comes from a library that is not
+  installed, is now answered with a `GenericResultFailure` on its `response_topic` instead of
+  being dropped, so the client gets an error instead of timing out. In an `EventRequestBatch`, an
+  unreadable request fails on its own and the rest of the batch still runs.
+- The engine's connection to Griptape Cloud now sends a ping every 20 seconds and reconnects when
+  one goes unanswered or a send stalls. A connection dropped silently by the network, for example
+  after sleep or a NAT timeout, no longer leaves the editor unable to reach a running engine.
+- Griptape Cloud engine discovery no longer lists a library's worker processes. Workers accept no
+  client connections, so a client that picked one from the list timed out connecting to it.
+  Engine records no longer include `orchestrator_engine_id`.
+- A permission denial from a Griptape managed policy that an organization attached to its license
+  now says an organization administrator can detach it, instead of saying the policy cannot be
+  overridden by the organization. That wording now appears only for Griptape platform policies.
+- With a license, an engine whose seat an admin releases now retries for a seat every 30 seconds
+  during the grace period and keeps running once it gets one, instead of shutting down when the
+  grace period ends.
+- With a license set, a client that connects while `gtn` is starting, such as the desktop app,
+  no longer takes a second license seat. The extra seat stayed counted against the pool for up to
+  five minutes, and when only one seat was free the engine failed to start with "No sessions
+  available".
+
 ### Editor 129
 
 #### Added

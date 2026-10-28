@@ -256,6 +256,8 @@
   five minutes, and when only one seat was free the engine failed to start with "No sessions
   available".
 
+### Editor 129.1
+
 ### Editor 129
 
 #### Added

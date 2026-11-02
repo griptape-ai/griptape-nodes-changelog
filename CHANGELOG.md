@@ -103,6 +103,17 @@
   includes the reason, such as "must be between 0 and 50", instead of only naming the parameter.
   [#5889](https://github.com/griptape-ai/griptape-nodes-engine/issues/5889)
 
+### App 0.103.0
+
+#### Changed
+
+- Griptape Nodes Engine is pinned to 0.106.0. See its
+  [release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.106.0).
+
+#### Fixed
+
+- `gtn diagnostics collect` now runs. The command was documented but missing from `gtn`.
+
 ## 2026-10-27
 
 ### [Engine 0.105.0](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.104.2...v0.105.0)

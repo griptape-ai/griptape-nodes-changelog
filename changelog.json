@@ -114,6 +114,35 @@
       ]
     },
     {
+      "id": "app@0.103.0",
+      "component": "App",
+      "version": "0.103.0",
+      "date": "2026-11-02",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "Griptape Nodes Engine is pinned to 0.106.0. See its\n[release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.106.0).",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "`gtn diagnostics collect` now runs. The command was documented but missing from `gtn`.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "engine@0.105.0",
       "component": "Engine",
       "version": "0.105.0",

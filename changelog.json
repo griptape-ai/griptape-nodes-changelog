@@ -8,6 +8,214 @@
   ],
   "releases": [
     {
+      "id": "engine@0.107.0",
+      "component": "Engine",
+      "version": "0.107.0",
+      "date": "2026-11-06",
+      "yanked": false,
+      "url": "https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.106.0...v0.107.0",
+      "summary": null,
+      "changes": [
+        {
+          "type": "Added",
+          "entries": [
+            {
+              "text": "A request envelope (`EventRequest`, and each request in an `EventRequestBatch`) now has an optional\n`open_workflow_id` beside `request_id`, naming the open workflow the request runs in.\n`EventManager.handle_request` and `ahandle_request` read it from `result_context`, as they read\n`request_id`, and echo it on the result envelope, where it stays apart from any `workflow_id` in\nthe result itself. A request that acts on a workflow fails with `WorkflowNotOpenResultFailure`\nwithout running when its `open_workflow_id` names no open workflow, and with\n`WorkflowNotNamedResultFailure` when it leaves the id out while none or several are open; requests\nabout the engine, such as `EngineHeartbeatRequest`, ignore it. See\n[Transports](https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/docs/guides/transports.md#sending-requests).",
+              "breaking": false
+            },
+            {
+              "text": "Execution events, such as the current node, parameter value updates and a run's end, and streamed\nprogress events now have a `workflow_id` naming the open workflow they belong to. A result's\n`open_workflow_id` now names the workflow the request acted on even when the request left it out,\nsuch as the only open workflow, a run's own workflow, or the workflow a load opened. See\n[Transports](https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/docs/guides/transports.md#getting-results-back).",
+              "breaking": false
+            },
+            {
+              "text": "A `FileFormat` trait marks a parameter's value as a file format of a given kind (`image`, `video`,\n`audio`, `threed`). It renders the kind as the `file_format` UI option, which the editor copies onto\na Start Flow parameter and the workflow shape reports, so a host running the workflow can offer only\nthe formats it can open.\n[#6193](https://github.com/griptape-ai/griptape-nodes-engine/issues/6193)",
+              "breaking": false
+            },
+            {
+              "text": "`File`, `FileDestination`, `Directory` and `FileSequence` now keep the workflow they were built in,\nor take one as `workflow`, so node code that writes from a `threading.Thread` or thread pool\nresolves `{outputs}` in the node's workflow. `ProjectFileDestination.from_situation_in_workflow`\ndoes the same for a situation.",
+              "breaking": false
+            },
+            {
+              "text": "`EngineHeartbeatResultSuccess` now reports `engine_run_id`, which changes every time the engine\nstarts. Workflow ids last only until a restart, so a client that sees a new `engine_run_id` drops\nthe workflow ids it kept. Unlike `session_id`, it never survives a restart.",
+              "breaking": false
+            },
+            {
+              "text": "`EngineHeartbeatResultSuccess` now lists every open workflow in `open_workflows`. The\n`current_workflow` fields describe the one opened last.",
+              "breaking": false
+            },
+            {
+              "text": "Advanced libraries can offer their own request types as tools on the engine's MCP server by\nreturning them from `get_mcp_tools()`. The chat sidebar lists loaded libraries with tools under\n\"Libraries\" in the \"MCP servers\" dropdown.",
+              "breaking": false
+            },
+            {
+              "text": "A list parameter's element details now include `row_input_types`, the types a new entry accepts,\neven when the list has no entries yet. An editor can use it instead of copying the engine's rules.",
+              "breaking": false
+            },
+            {
+              "text": "MCP clients can now name the workflow their tool calls act on with an `X-Griptape-Workflow-Id`\nheader. A client that sends none works, for the rest of its MCP session, on the workflow its own\n`EnsureWorkflowAndFlowRequest` or `SetWorkflowContextRequest` opened or selected. Either keeps\nreaching the workflow after saving a Griptape-provided template continues it in a copy. The\neditor's chat agent, including the tools libraries give it, acts on the workflow its message was\nsent from. See [Connect External MCP Clients](https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/docs/guides/mcp/external_clients.md#choose-the-workflow).",
+              "breaking": false
+            },
+            {
+              "text": "Nodes now have a read-only `workflow` property naming the workflow they were added to, or `None`\nfor a node that was never added to one, such as during its `__init__`.",
+              "breaking": false
+            },
+            {
+              "text": "`RefreshProjectTemplatesRequest` re-checks every path in `projects_to_register` and loads the\nprojects that have become reachable since the engine started, such as projects on a network drive\nthat mounted late, without restarting the engine.\n[#6134](https://github.com/griptape-ai/griptape-nodes-engine/issues/6134)",
+              "breaking": false
+            },
+            {
+              "text": "Every request result now carries `engine_id` on its envelope, naming the engine that sent it, so\na client that reaches an engine through a session topic knows which engine holds the session.",
+              "breaking": false
+            },
+            {
+              "text": "The sidebar agent leaves out a skill whose `SKILL.md` frontmatter sets\n`disable-model-invocation: true`, so a skill can stay in `.agents/skills` without the agent\nusing it.",
+              "breaking": false
+            },
+            {
+              "text": "The engine log now warns when a skill's `description` is longer than 1,024 characters or its\nfrontmatter sets fields that Griptape Nodes ignores, such as `allowed-tools`.",
+              "breaking": false
+            },
+            {
+              "text": "The `Widget` trait takes a `synced_parameters` list naming other parameters on the node that a\ncustom widget reads and writes directly, so a node no longer copies them into the widget's own\nvalue. See\n[Custom Widgets](https://docs.griptapenodes.com/en/stable/development/custom_nodes/custom_widgets/).\n[#4639](https://github.com/griptape-ai/griptape-nodes-engine/issues/4639)",
+              "breaking": false
+            },
+            {
+              "text": "Every workflow now has a `workflow_id` that the engine gives it while it runs. It stays the same\nwhen the workflow is saved, renamed, or moved, and when the engine rescans the workspace, but it\nis not saved in the workflow's file, so a restarted engine gives the workflow a new one. Results\nthat name a workflow now also report its id, such as `GetWorkflowContextSuccess.workflow_id` and\n`EngineHeartbeatResultSuccess.current_workflow_id`.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "**Breaking:** A saved workflow file's `build_workflow()` no longer opens a workflow. It builds into\nthe workflow its caller opened, and `aexecute_workflow()` opens the file when it runs on its own.\nCode that runs a saved file by awaiting `build_workflow()` directly must open the workflow first\nwith `GriptapeNodes.ContextManager().push_workflow(file_path=...)`, or call\n`GriptapeNodes.WorkflowManager().run_workflow()`, which opens it when none is open. Files saved\nbefore keep working unchanged.",
+              "breaking": true
+            },
+            {
+              "text": "**Breaking:** `SetWorkflowContextRequest` and `EnsureWorkflowAndFlowRequest` now open a new\nunsaved workflow only from a `workflow_name` of `unsaved:` followed by 32 lowercase hex digits,\nthe form the engine mints. Any other `unsaved:` name fails. Leave `workflow_name` out to have the\nengine pick one, and read it from the result.",
+              "breaking": true
+            },
+            {
+              "text": "**Breaking:** The `Workflow` class in `griptape_nodes.node_library.workflow_registry` changed for\nnode libraries that use it. `Workflow.file_path` is read-only: move a workflow's file with\n`MoveWorkflowRequest`. The constructor now takes a `workflow_id`, and `Workflow.from_disk` is\ngone: register a workflow file with `RegisterWorkflowRequest`. The registry's\n`clear_all_workflows` is gone: rescan the workspace with `RefreshWorkflowRegistryRequest`.",
+              "breaking": true
+            },
+            {
+              "text": "**Breaking:** `SetWorkflowContextRequest` and `EnsureWorkflowAndFlowRequest` now fail for a\n`workflow_name` that no registered workflow has, instead of opening a blank workflow under that\nname. To start a new workflow, leave `workflow_name` out and pass `display_name`.\n`ContextManager.push_workflow(workflow_name=...)` with such a name opens a new unsaved workflow\nwith that display name and returns its `unsaved:<id>` name. `push_workflow(file_path=...)` with a\npath that has no file opens a new unsaved workflow in that file's folder, whose `absolute_path` on\n`ContextManager.get_current_workflow()` is `None`.",
+              "breaking": true
+            },
+            {
+              "text": "**Breaking:** `RunWorkflowFromRegistryRequest` with `run_with_clean_slate=False` now fails while\na workflow is open, instead of loading the second workflow into the open one, since only one\nworkflow is open at a time. Clear the open workflow first with `ClearAllObjectStateRequest`, or\nsend `run_with_clean_slate=True`. Likewise, `GriptapeNodes.ContextManager().push_workflow()` and\nits `workflow()` block now refuse while a workflow is open.",
+              "breaking": true
+            },
+            {
+              "text": "A list parameter connected to a whole list now keeps its own entries. The node reads the\nconnected list's items first, then the entries added by hand, instead of ignoring the entries.",
+              "breaking": false
+            },
+            {
+              "text": "\"Add Library\" now downloads only a library's metadata file when inspecting a Git repository,\ninstead of every file in the latest commit. Repositories with large files inspect much faster,\nespecially on slow connections.\n[#4836](https://github.com/griptape-ai/griptape-nodes-engine/issues/4836)",
+              "breaking": false
+            },
+            {
+              "text": "`MergeWorkflowBranchRequest` now fails while the branch or its source is the open workflow. The\nmerge removes the branch and rewrites the source's file, which the open workflow's next save\nwould write over. Open another workflow first.",
+              "breaking": false
+            },
+            {
+              "text": "Creating a global variable with `CreateVariableRequest` now fails when no workflow is open,\ninstead of storing it for the whole engine.",
+              "breaking": false
+            },
+            {
+              "text": "The library warning about components older than the ones Griptape Nodes runs on now suggests\nresetting the library when those versions are left over from an earlier install, and links to a\nnew troubleshooting section in the Libraries guide.\n[#6098](https://github.com/griptape-ai/griptape-nodes-engine/issues/6098)",
+              "breaking": false
+            },
+            {
+              "text": "The sidebar agent now reads a skill's bundled files with read-only file tools, so it can look\nthrough the skill's folder and read scripts, images, and PDFs as well as text. It still can't run\nscripts.",
+              "breaking": false
+            },
+            {
+              "text": "A node whose library runs in a separate process now fails with \"no workflow was open when it was\nsent\" when its `ExecuteNodeRequest` names no open workflow (`orchestrator_workflow_id`), instead of\nrunning outside any workflow. Running a node from an open workflow always names it.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Deprecated",
+          "entries": [
+            {
+              "text": "The `WorkflowRegistry` classmethods `generate_new_workflow`, `ensure_unsaved`,\n`delete_workflow_by_name`, `clear_user_workflows`, and `rekey_workflow` are deprecated and log a\nwarning when called. They will be removed in 0.110.0. Use `RegisterWorkflowRequest`,\n`SetWorkflowContextRequest`, `DeleteWorkflowRequest`, `RefreshWorkflowRegistryRequest`, and\n`MoveWorkflowRequest` or `RenameWorkflowRequest` instead.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Removed",
+          "entries": [
+            {
+              "text": "**Breaking:** Manager methods that acted on whichever workflow was open are removed. Call the `_in`\nvariant with the node's workflow, for example `FlowManager.get_parent_flow_in(self.workflow, name)`.\n`cancel_flow_run` becomes `cancel_all_runs_in(workflow)`, and the `ContextManager` path getters\nbecome `absolute_path` and `working_directory` on `get_current_workflow()`.\n`FlowManager.cancel_run` now requires `flows`; use `cancel_run_in(workflow, run_id)`.\nRemoved: `ObjectManager.add_object_by_name`, `del_obj_by_name`; `FlowManager.get_parent_flow`,\n`reparent_flow`, `flow_state`, `unresolve_all_nodes_in_flow`, `clear_execution_queue`,\n`cancel_flow_run`, `has_connection`, `get_connections_on_node`, `get_connected_output_parameters`,\n`get_connected_input_parameters`, `get_connected_input_from_node`,\n`get_connected_output_from_node`, `get_start_node_queue`, `get_start_node_from_node`,\n`get_prev_node`; `ContextManager.get_current_workflow_file_path`,\n`get_current_workflow_working_directory`.",
+              "breaking": true
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "The File Browser dialog's file preview no longer sends the entire file as a data URL for images\nover 10 MB that Pillow can't decode, which could hang the engine base64-encoding a large or\nmulti-part sequence frame (e.g. EXR). Those files now get no preview instead. Images Pillow can\ndecode still get a thumbnail regardless of file size.",
+              "breaking": false
+            },
+            {
+              "text": "A data node fed by a ForEach or ForLoop Start's `current_item` or `index` now re-evaluates on every\npass of every run, not only the first. On later runs it kept its value from the last pass of the\nprevious run and fed it to every pass.\n[#5751](https://github.com/griptape-ai/griptape-nodes-engine/issues/5751)",
+              "breaking": false
+            },
+            {
+              "text": "`InspectLibraryRepoRequest` now honors a `url@ref` suffix on `git_url` (for example\n`user/repo@stable`), as `DownloadLibraryRequest` already does, instead of failing to reach the\nrepository. `ref` is now optional and overrides the suffix when set.",
+              "breaking": false
+            },
+            {
+              "text": "Inspecting a library from a Git repository in the Add Library modal no longer blocks the engine\nwhile the repository is fetched, which could drop the editor's connection on Windows.\n[#4836](https://github.com/griptape-ai/griptape-nodes-engine/issues/4836)",
+              "breaking": false
+            },
+            {
+              "text": "Saving or copying a node keeps the item types of its lists. A list whose type a node set while\nrunning, such as Display List's, loads as `list[Thing]` instead of `list[list[Thing]]`, and a row\nthe node typed on its own, such as an `int` row beside `str` rows, keeps its value instead of\nfailing to load. Workflows saved before this fix still load their list types as saved.",
+              "breaking": false
+            },
+            {
+              "text": "A data node fed by a node that runs again now recomputes instead of passing on its earlier\noutput. Before, pressing Run a second time, or a later pass of a For Loop or For Each group,\ncould hand the next node the previous run's value: for example, Merge Texts kept its first\nresult while the Agent feeding it wrote new text.",
+              "breaking": false
+            },
+            {
+              "text": "While, Retry and For Each groups now end, repeat, skip or break the loop according to the branch\nthe loop body took. Before, a node on a branch that was not taken could still run, and its exit\nthen counted as taken: a group whose body reached \"Done\" could run again, and a For Each group\nwhose body reached \"Loop Complete\" could break out of the loop.\nWhen several body nodes are wired into the same exit, every wire is now checked, not only the\nfirst one drawn, so the result no longer depends on the order the connections were made.",
+              "breaking": false
+            },
+            {
+              "text": "A loop no longer counts the entries of a list twice when the list is also connected as a whole\nlist. After the loop ran, the list read, and saved, its own entries a second time.",
+              "breaking": false
+            },
+            {
+              "text": "A data node with no control connections that reads, directly or through other data nodes, from a\nnode on the control path now shows this run's value when the workflow is run again. Before, in\n\"parallel\" execution mode it could keep the previous run's value, or read a blank value, because\nit ran at the same time as the node feeding it.",
+              "breaking": false
+            },
+            {
+              "text": "Renaming the open workflow no longer closes it and reloads it from its file, so its canvas and\nnode results are no longer reset. It stays open under the new name.",
+              "breaking": false
+            },
+            {
+              "text": "Resolving a node downstream of a `ForEach` loop while the loop is still running no longer leaves\nthe workflow stuck as running. The downstream node now runs once the loop finishes, and later\nruns of it are no longer refused with \"already executing\".\n[#5754](https://github.com/griptape-ai/griptape-nodes-engine/issues/5754)",
+              "breaking": false
+            },
+            {
+              "text": "Resolving a node that reads a `ForEach` or `ForLoop` End's `results`, after editing an input to\nthe loop body, now runs the loop again and finishes. Before, the loop never started, the body ran\nonce outside the loop with a stale `current_item`, and the resolved node stayed running forever.",
+              "breaking": false
+            },
+            {
+              "text": "Running a node placed after a `ForEach` loop no longer fails with a `KeyError` naming a node from\noutside the loop, once every iteration has finished, when a node in the loop body reads an input\nfrom that outside node. The run now completes and the node after the loop gets every iteration's\nresults. Other nodes outside the loop that read the same outside node, such as a `Display Text`,\nnow show this run's value instead of the previous run's.\n[#5753](https://github.com/griptape-ai/griptape-nodes-engine/issues/5753)\n[#5747](https://github.com/griptape-ai/griptape-nodes-engine/issues/5747)",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "engine@0.106.0",
       "component": "Engine",
       "version": "0.106.0",

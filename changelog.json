@@ -8,6 +8,365 @@
   ],
   "releases": [
     {
+      "id": "engine@0.108.0",
+      "component": "Engine",
+      "version": "0.108.0",
+      "date": "2026-11-10",
+      "yanked": false,
+      "url": "https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.107.0...v0.108.0",
+      "summary": null,
+      "changes": [
+        {
+          "type": "Added",
+          "entries": [
+            {
+              "text": "Node libraries can read the destination a connected `File Output Settings` node supplies with\n`GetConnectedFileDestinationRequest`, which works in a worker, and rebuild it with\n`file_destination_from_spec`. `GetConnectedDirectoryDestinationRequest` and\n`GetConnectedFileSequenceDestinationRequest` do the same for directory and file sequence outputs.\n[#5971](https://github.com/griptape-ai/griptape-nodes-engine/issues/5971)",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "`local_objects.drop` and `local_objects.drop_all` now free a library's object as soon as they\nare called, even while nodes are running, instead of waiting until no node is running. A library\nswitching models now frees the old model before loading the new one, rather than holding both\nin GPU memory until the run ends.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "Directory parameters built with `ProjectDirectoryParameter` now use an absolute, `~/...`, or\n`file://` path as the destination instead of nesting it inside the outputs directory. A plain\nname still goes through the situation template and is versioned. Web addresses are rejected with\nan error.\n[#6237](https://github.com/griptape-ai/griptape-nodes-engine/issues/6237)",
+              "breaking": false
+            },
+            {
+              "text": "Nodes running in a worker or inside an Isolated Execution group now save with the name, location\nand \"If File Exists\" policy from a connected `File Output Settings` node, instead of their own\ndefaults.\n[#5971](https://github.com/griptape-ai/griptape-nodes-engine/issues/5971)",
+              "breaking": false
+            },
+            {
+              "text": "A saved workflow run without `--project-file-path` now fails when its configured project (the\n`project_file` setting, else the workspace's `griptape-nodes-project.yml`) cannot be activated,\ninstead of running on system defaults.\n[#6214](https://github.com/griptape-ai/griptape-nodes-engine/issues/6214)",
+              "breaking": false
+            },
+            {
+              "text": "Running a saved workflow from the command line no longer writes `storage_backend` to your config\nfile, so it no longer switches the editor's storage backend. `--storage-backend` now applies to\nthe run it is passed to instead of the next one, and leaving it out uses the configured backend\ninstead of `local`.",
+              "breaking": false
+            },
+            {
+              "text": "A loop body copy of a node now keeps every value the canvas node holds, including inputs fed by\nconnections, so a node whose parameters depend on an input (such as a diffusers node whose\n`image_references` depends on `pipeline`) no longer loses them when the loop runs. The copy's\nconnections are made the way a saved workflow makes them, so they push nothing into nodes while the\nbody is still being assembled, and a saved value the copy refuses on a connected input is logged and\nskipped instead of stopping the loop.\n[#6104](https://github.com/griptape-ai/griptape-nodes-engine/issues/6104)",
+              "breaking": false
+            },
+            {
+              "text": "`ForEach Group`, `For Loop Group` and other loop groups show one way in and one way out, `Start Loop`\nand `On Complete`. The second `Flow In` / `Flow Out` pair, which nothing read at run time, is gone, so a\nchain wired through `Flow Out` no longer stops silently at the loop. Workflows saved with connections on\n`Flow In` or `Flow Out` load unchanged and the connections move to `Start Loop` and `On Complete`.\n[#6250](https://github.com/griptape-ai/griptape-nodes-engine/issues/6250)",
+              "breaking": false
+            },
+            {
+              "text": "A loop with nodes in its body no longer collects an empty list when the start node's\n`current_item` or `index` is wired straight into the end node's `new_item_to_add`. A ForEach or\nFor Loop group whose own `current_item` or `index` is wired into its own `new_item_to_add` now\nruns and collects the items instead of being skipped by the run.\n[#6238](https://github.com/griptape-ai/griptape-nodes-engine/issues/6238)",
+              "breaking": false
+            },
+            {
+              "text": "`make run` and `make run/refresh` no longer fail with \"The syntax of the command is incorrect\"\non Windows when make runs recipes through `cmd.exe`.\n[#6174](https://github.com/griptape-ai/griptape-nodes-engine/issues/6174)",
+              "breaking": false
+            },
+            {
+              "text": "A node now saves where a `File Output Settings` node wired to it says when the wire crosses a\ngroup boundary: the node inside the group and the settings node outside it, the other way round,\nor each in its own group. Before, it saved with its own default name, location and\nexisting-file policy.\n[#6146](https://github.com/griptape-ai/griptape-nodes-engine/issues/6146)",
+              "breaking": false
+            },
+            {
+              "text": "A loop run locally with `run_in_order` off no longer collects the item of a pass that exited\nthrough `skip_iteration`, so filter loops return the filtered list in parallel too. Loops in an\nisolated or published execution environment still collect skipped passes.\n[#6247](https://github.com/griptape-ai/griptape-nodes-engine/issues/6247)",
+              "breaking": false
+            },
+            {
+              "text": "Agents can fill `ParameterList` inputs such as `items` on Create Image List. A single-item\nconnection aimed at the list itself now fails with a message saying to add a slot with\n`AddParameterToNodeRequest(parent_container_name=...)` and connect to the slot it returns. The\nrequest's tool description and the `griptape-nodes-workflows` skill teach the same steps.\n[#5147](https://github.com/griptape-ai/griptape-nodes-engine/issues/5147)",
+              "breaking": false
+            },
+            {
+              "text": "A process running the engine no longer risks crashing with a segmentation fault as it exits after\nrefreshing a preview or syncing workflows. The threads that watch those files now stop before\nPython shuts down.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "app@0.104.0",
+      "component": "App",
+      "version": "0.104.0",
+      "date": "2026-11-10",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Added",
+          "entries": [
+            {
+              "text": "Engines that use a Griptape license (`GRIPTAPE_NODES_LICENSE`) can now be reached through the\nGriptape Cloud relay. The license takes precedence over `GT_CLOUD_API_KEY`.",
+              "breaking": false
+            },
+            {
+              "text": "An engine can now run a library's nodes on another engine named in\n`distributed_execution.library_engines`, reaching it directly when that engine sets\n`transports.websocket_direct.advertise_url` and through Griptape Cloud otherwise. An engine that\nsets `advertise_url` now reports itself to the engine registry even without Griptape Cloud.",
+              "breaking": false
+            },
+            {
+              "text": "A request envelope's `open_workflow_id` now reaches the engine and comes back on the result,\nincluding on the app's own failures for denied or unreadable requests. Progress events the app\nforwards name their node's workflow in `workflow_id`.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "Griptape Nodes Engine is pinned to 0.108.0. See its\n[release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.108.0).",
+              "breaking": false
+            },
+            {
+              "text": "The editor installed with the `editor` extra is pinned to 0.130.0.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "editor@130",
+      "component": "Editor",
+      "version": "130",
+      "date": "2026-11-10",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Added",
+          "entries": [
+            {
+              "text": "With the \"Rich text inputs\" beta feature on (Settings → \"Beta Features\"), a text field can reference\nthe parameters of other nodes in the same flow, except nodes inside ForEach, ForLoop and While\ngroups. Typing `{` and part of a node's name lists the nodes, and typing `.` after one lists its\nparameters that have an output, so `{node.parameter}` can be picked instead of typed. Picking a\nparameter that has no variable yet, or hovering one, offers \"Add variable and connect node\" and\nshows the parameter's current value. Enter confirms it, and the prompt closes at once while a\nplaceholder node shows where the new node will go. It creates a variable of that name from that\nvalue and adds a \"Create Variable: node.parameter\" node to the right of the parameter, connected\nto it. The variable holds the value from the last time the whole flow ran, so a change to the\nsource shows up on the next run.",
+              "breaking": false
+            },
+            {
+              "text": "**Settings → Node Settings → Dot Size** scales Dot nodes and their ports on the canvas, from half\nto three times the default size.",
+              "breaking": false
+            },
+            {
+              "text": "The \"Connect\" tab of the engine picker has an \"Organization\" dropdown when you belong to more than\none organization. It lists that organization's engines, and \"Generate API Key\" creates keys in it.",
+              "breaking": false
+            },
+            {
+              "text": "\"Add to Griptape Nodes\" links can pin a library to a branch, tag, or commit with a `ref`\nparameter, for example `#library-management?git=<repo>&ref=stable`. The ref fills in **Branch /\nTag / Commit** under **Advanced Options** and is the version that gets installed.",
+              "breaking": false
+            },
+            {
+              "text": "Settings → \"Libraries\" now has a filter box for each library list (\"Libraries To Register\" and\n\"Libraries To Download\"), so a long list of installed libraries can be narrowed down by path or\ngit repository instead of scrolling.",
+              "breaking": false
+            },
+            {
+              "text": "The chat sidebar's \"MCP servers\" dropdown lists loaded node libraries that come with their own\ntools under \"Libraries\". Picking one gives the agent those tools for the conversation. Needs\nengine 0.107.0 or later.",
+              "breaking": false
+            },
+            {
+              "text": "Dropping a connection on a `ParameterList` handle that does not accept the dragged type now shows\na short warning naming the accepted types, instead of attempting the connection.",
+              "breaking": false
+            },
+            {
+              "text": "A list entry that holds a whole connected list now shows a list icon and, once the upstream node\nhas run, its item count, so it is no longer mistaken for a single item.",
+              "breaking": false
+            },
+            {
+              "text": "The run toolbar's **Cancel Run** button shows a count of the runs waiting their turn: behind the\nrun in progress, or in line on another computer your workflow sends nodes to. Hover it to see\nthem in the order they will start. Needs an engine that queues runs.",
+              "breaking": false
+            },
+            {
+              "text": "The refresh button on the Workflows page also re-checks registered projects, so projects on a\ndrive that mounted after the engine started show up without restarting the engine. Needs engine\n0.107.0 or later.",
+              "breaking": false
+            },
+            {
+              "text": "Expired license keys can be reissued from Admin Dashboard → \"License Keys\" with a new\nexpiration date, which reactivates them and keeps their access groups and permission templates.",
+              "breaking": false
+            },
+            {
+              "text": "**Add Parameter → Type → Sequence** declares an image-sequence parameter.",
+              "breaking": false
+            },
+            {
+              "text": "Custom widgets can declare `synced_parameters`. The widget reads those parameters' values and\ncommits to them directly, so a node no longer copies them into the widget's own value. Dragging\nthe widget moves the parameters' controls live, scrubbing a synced number or color parameter moves\nthe widget, and parameters with an incoming connection are locked. Needs an engine that sends\n`synced_parameters`.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "**Breaking:** The editor needs engine 0.107.0 or later and asks you to update older engines\ninstead of connecting. From 0.107.0 the engine names itself on every reply, which the editor\nneeds to know which engine holds a restored session.",
+              "breaking": true
+            },
+            {
+              "text": "The hosted editor finds engines through the Griptape Cloud engine registry instead of engine\nheartbeats, so the engine picker shows only the selected organization's engines.",
+              "breaking": false
+            },
+            {
+              "text": "A selected Dot node's ports are larger, so wires can be dragged to and from them without\nzooming in.",
+              "breaking": false
+            },
+            {
+              "text": "The Libraries modal's filter now matches a library's description, file path, and git repository\nas well as its name, so a library can be found by where it came from or what it does.",
+              "breaking": false
+            },
+            {
+              "text": "In Library Management, \"Reset\" now shows on the row of any library marked \"Problems\" or \"Failed\nto load\", next to that label, so it no longer takes expanding the row to find it. Links in a\nlibrary's problem details now open in the browser.",
+              "breaking": false
+            },
+            {
+              "text": "The \"Reissue token\" button on Admin Dashboard → \"License Keys\" now asks for confirmation before\nreplacing an active key's token, and can set a new expiration date at the same time.",
+              "breaking": false
+            },
+            {
+              "text": "Clicking \"+\" or \"−\" on a list entry, or dropping a connection on a list, now updates the node\nright away, with a dimmed placeholder entry and a dashed edge, instead of waiting for the engine\nto answer, which was slow on a distant engine. Removing a connected entry also removes its edge\nimmediately.",
+              "breaking": false
+            },
+            {
+              "text": "The editor now lazy loads heavy components, like the 3D and splat viewers, the image, crop, and\nmask editors, and Arrange Graph, the first time you use them.",
+              "breaking": false
+            },
+            {
+              "text": "Every `ParameterList` and `ParameterGroup` header (such as the OpenAI Image Generation node's\n\"Input Images\" list) now shows its collapse chevron on the right instead of the left, and its\nconnection handle stays visible on the left in both the collapsed and expanded states, including\non an empty list with no items yet. The same handle accepts a single item or a whole list in one\ndrop, adding each as a new entry labelled with its source while connected (for example \"Load\nImage · image\"), so you\nno longer connect through the separate \"Add Item\" row. To add an empty entry without a connection,\nclick the \"+\" at the bottom of the list. It appears only on lists whose entries you can fill in:\ntext, numbers, true/false, dict and JSON. Other lists, such as Create List and Create Image List,\nnow gain entries only through connections. A dropped list adds its items to the list instead of\nreplacing it, so you can connect several lists. A list that can hold any type, such as Create\nList, keeps a dropped list as one item. With an engine older than 0.107.0, a dropped single\nitem still becomes a new entry, but a dropped list connects to the list itself, as before. The\nhandle keeps its \"ready for another connection\" look (not a filled, \"used up\" dot) after the\nfirst drop, since it keeps accepting more.\nRemoving an entry's connection now leaves the entry in place, collapsed or not, so the list keeps\nits order. Previously an entry in a collapsed list was deleted along with its connection.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "In the chat sidebar, opening a thread whose last run used a model, provider, or MCP server that\nis no longer available now shows a warning icon beside the model picker, once. Clicking it names\nthe thread and says what each setting switched to; the switch is kept as that thread's setting.\nIt no longer repeats on every visit and engine start, and clears when you dismiss it or pick new\nsettings. A retired model with a set replacement moves to it without a warning.",
+              "breaking": false
+            },
+            {
+              "text": "The choice list on a parameter that allows custom values no longer closes when you drag its\nscrollbar.",
+              "breaking": false
+            },
+            {
+              "text": "The minus button on a connection removes it immediately. It used to sometimes do nothing until you\nclicked elsewhere, because it relied on simulated clicks and key presses.",
+              "breaking": false
+            },
+            {
+              "text": "Digits in the editor no longer render dimmed and spaced out (`PXR24` as `PXR 2 4`) on Linux machines\nwithout any of the default UI fonts installed.",
+              "breaking": false
+            },
+            {
+              "text": "A node dragged over a Dot node now covers the Dot, the same way it covers the Dot's wires.",
+              "breaking": false
+            },
+            {
+              "text": "The editor no longer re-renders every 5 seconds when the engine checks in with nothing new to\nreport, which removes a periodic stutter, worst on canvases with 3D nodes.",
+              "breaking": false
+            },
+            {
+              "text": "File browser errors, such as a folder that can't be opened or a rename that fails, now show the\nengine's reason instead of a generic \"Failed to …\" message.",
+              "breaking": false
+            },
+            {
+              "text": "The file browser now shows the error when the first folder it opens can't be read, such as a\npermission error, instead of spinning forever.",
+              "breaking": false
+            },
+            {
+              "text": "The file browser now keeps the sort you chose when you open another folder, instead of resetting\nthe listing to folders first.",
+              "breaking": false
+            },
+            {
+              "text": "When a path the file browser tries to open no longer exists, it now falls back to the parent\nfolder instead of jumping to the root.",
+              "breaking": false
+            },
+            {
+              "text": "\"New File\" and \"New Directory\" in the file browser now pick a name that doesn't clash with the\nitems in the folder you are viewing, instead of one chosen from the previous folder's items.",
+              "breaking": false
+            },
+            {
+              "text": "In Model Management, completed entries under \"Downloads\" now show an X (\"Clear from list\")\ninstead of a red trash icon, since clearing one leaves the model installed, and a \"Clear completed\"\nbutton clears them all. Active and paused downloads show a stop icon (\"Cancel download\").",
+              "breaking": false
+            },
+            {
+              "text": "The right-hand Sidebar Panels region no longer sometimes renders blank with an unresponsive panel\ntoggle after collapsing and re-expanding it, dragging its resize separator, or returning to the\neditor after navigating away (e.g. in the desktop app).",
+              "breaking": false
+            },
+            {
+              "text": "After pressing Escape to close the variable picker in a text input, typing inside the same `{`\nno longer reopens it on every keystroke.",
+              "breaking": false
+            },
+            {
+              "text": "The workflow browser now remembers the sort you picked (column and direction) for each section,\ninstead of going back to \"Modified\" newest first every time it reopens.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desktop@0.30.0",
+      "component": "Desktop",
+      "version": "0.30.0",
+      "date": "2026-11-10",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Added",
+          "entries": [
+            {
+              "text": "License users can connect through Griptape Cloud to engines on other machines that use the same license.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "The bundled version of the Griptape Nodes app has been updated to `0.104.0`, with engine `0.108.0` and editor `0.130.0`.",
+              "breaking": false
+            },
+            {
+              "text": "When you sign in with a Griptape account, the app now connects straight to the engine on your computer instead of going through Griptape Cloud. Engines on other machines are still reached through Griptape Cloud.",
+              "breaking": false
+            },
+            {
+              "text": "Only the engine you're connected to can be renamed from **Manage Engines**.",
+              "breaking": false
+            },
+            {
+              "text": "The **Direct Engine WebSocket URL** setting is now shown for every account, since the app always uses it to reach the engine on your computer.",
+              "breaking": false
+            },
+            {
+              "text": "The editor now comes from the engine you're using. The engine on your computer serves its own matching editor, and engines on other machines open in the latest Griptape Nodes web editor, so the editor always fits the engine it's connected to.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "When the engine rejects the license at startup, the error now explains the issue and offers a shortcut to license settings.",
+              "breaking": false
+            },
+            {
+              "text": "The Admin Dashboard window no longer always shows horizontal and vertical scrollbars, or an empty band at the top on Linux.",
+              "breaking": false
+            },
+            {
+              "text": "GPU usage and VRAM in the system resources panel no longer stay at N/A for the rest of the session after `nvidia-smi` fails once, such as during a GPU out-of-memory error.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "engine@0.107.0",
       "component": "Engine",
       "version": "0.107.0",
@@ -209,6 +568,26 @@
             },
             {
               "text": "Running a node placed after a `ForEach` loop no longer fails with a `KeyError` naming a node from\noutside the loop, once every iteration has finished, when a node in the loop body reads an input\nfrom that outside node. The run now completes and the node after the loop gets every iteration's\nresults. Other nodes outside the loop that read the same outside node, such as a `Display Text`,\nnow show this run's value instead of the previous run's.\n[#5753](https://github.com/griptape-ai/griptape-nodes-engine/issues/5753)\n[#5747](https://github.com/griptape-ai/griptape-nodes-engine/issues/5747)",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desktop@0.29.1",
+      "component": "Desktop",
+      "version": "0.29.1",
+      "date": "2026-11-03",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "Images in nodes no longer stay blank, or keep pulsing, after a run or a reload. This happened when the app rejoined its previous session before Griptape Cloud listed that session.",
               "breaking": false
             }
           ]

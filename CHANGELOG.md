@@ -2,6 +2,245 @@
 
 # Griptape Nodes Changelog
 
+## 2026-11-10
+
+### [Engine 0.108.0](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.107.0...v0.108.0)
+
+#### Added
+
+- Node libraries can read the destination a connected `File Output Settings` node supplies with
+  `GetConnectedFileDestinationRequest`, which works in a worker, and rebuild it with
+  `file_destination_from_spec`. `GetConnectedDirectoryDestinationRequest` and
+  `GetConnectedFileSequenceDestinationRequest` do the same for directory and file sequence outputs.
+  [#5971](https://github.com/griptape-ai/griptape-nodes-engine/issues/5971)
+
+#### Changed
+
+- `local_objects.drop` and `local_objects.drop_all` now free a library's object as soon as they
+  are called, even while nodes are running, instead of waiting until no node is running. A library
+  switching models now frees the old model before loading the new one, rather than holding both
+  in GPU memory until the run ends.
+
+#### Fixed
+
+- Directory parameters built with `ProjectDirectoryParameter` now use an absolute, `~/...`, or
+  `file://` path as the destination instead of nesting it inside the outputs directory. A plain
+  name still goes through the situation template and is versioned. Web addresses are rejected with
+  an error.
+  [#6237](https://github.com/griptape-ai/griptape-nodes-engine/issues/6237)
+- Nodes running in a worker or inside an Isolated Execution group now save with the name, location
+  and "If File Exists" policy from a connected `File Output Settings` node, instead of their own
+  defaults.
+  [#5971](https://github.com/griptape-ai/griptape-nodes-engine/issues/5971)
+- A saved workflow run without `--project-file-path` now fails when its configured project (the
+  `project_file` setting, else the workspace's `griptape-nodes-project.yml`) cannot be activated,
+  instead of running on system defaults.
+  [#6214](https://github.com/griptape-ai/griptape-nodes-engine/issues/6214)
+- Running a saved workflow from the command line no longer writes `storage_backend` to your config
+  file, so it no longer switches the editor's storage backend. `--storage-backend` now applies to
+  the run it is passed to instead of the next one, and leaving it out uses the configured backend
+  instead of `local`.
+- A loop body copy of a node now keeps every value the canvas node holds, including inputs fed by
+  connections, so a node whose parameters depend on an input (such as a diffusers node whose
+  `image_references` depends on `pipeline`) no longer loses them when the loop runs. The copy's
+  connections are made the way a saved workflow makes them, so they push nothing into nodes while the
+  body is still being assembled, and a saved value the copy refuses on a connected input is logged and
+  skipped instead of stopping the loop.
+  [#6104](https://github.com/griptape-ai/griptape-nodes-engine/issues/6104)
+- `ForEach Group`, `For Loop Group` and other loop groups show one way in and one way out, `Start Loop`
+  and `On Complete`. The second `Flow In` / `Flow Out` pair, which nothing read at run time, is gone, so a
+  chain wired through `Flow Out` no longer stops silently at the loop. Workflows saved with connections on
+  `Flow In` or `Flow Out` load unchanged and the connections move to `Start Loop` and `On Complete`.
+  [#6250](https://github.com/griptape-ai/griptape-nodes-engine/issues/6250)
+- A loop with nodes in its body no longer collects an empty list when the start node's
+  `current_item` or `index` is wired straight into the end node's `new_item_to_add`. A ForEach or
+  For Loop group whose own `current_item` or `index` is wired into its own `new_item_to_add` now
+  runs and collects the items instead of being skipped by the run.
+  [#6238](https://github.com/griptape-ai/griptape-nodes-engine/issues/6238)
+- `make run` and `make run/refresh` no longer fail with "The syntax of the command is incorrect"
+  on Windows when make runs recipes through `cmd.exe`.
+  [#6174](https://github.com/griptape-ai/griptape-nodes-engine/issues/6174)
+- A node now saves where a `File Output Settings` node wired to it says when the wire crosses a
+  group boundary: the node inside the group and the settings node outside it, the other way round,
+  or each in its own group. Before, it saved with its own default name, location and
+  existing-file policy.
+  [#6146](https://github.com/griptape-ai/griptape-nodes-engine/issues/6146)
+- A loop run locally with `run_in_order` off no longer collects the item of a pass that exited
+  through `skip_iteration`, so filter loops return the filtered list in parallel too. Loops in an
+  isolated or published execution environment still collect skipped passes.
+  [#6247](https://github.com/griptape-ai/griptape-nodes-engine/issues/6247)
+- Agents can fill `ParameterList` inputs such as `items` on Create Image List. A single-item
+  connection aimed at the list itself now fails with a message saying to add a slot with
+  `AddParameterToNodeRequest(parent_container_name=...)` and connect to the slot it returns. The
+  request's tool description and the `griptape-nodes-workflows` skill teach the same steps.
+  [#5147](https://github.com/griptape-ai/griptape-nodes-engine/issues/5147)
+- A process running the engine no longer risks crashing with a segmentation fault as it exits after
+  refreshing a preview or syncing workflows. The threads that watch those files now stop before
+  Python shuts down.
+
+### App 0.104.0
+
+#### Added
+
+- Engines that use a Griptape license (`GRIPTAPE_NODES_LICENSE`) can now be reached through the
+  Griptape Cloud relay. The license takes precedence over `GT_CLOUD_API_KEY`.
+- An engine can now run a library's nodes on another engine named in
+  `distributed_execution.library_engines`, reaching it directly when that engine sets
+  `transports.websocket_direct.advertise_url` and through Griptape Cloud otherwise. An engine that
+  sets `advertise_url` now reports itself to the engine registry even without Griptape Cloud.
+- A request envelope's `open_workflow_id` now reaches the engine and comes back on the result,
+  including on the app's own failures for denied or unreadable requests. Progress events the app
+  forwards name their node's workflow in `workflow_id`.
+
+#### Changed
+
+- Griptape Nodes Engine is pinned to 0.108.0. See its
+  [release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.108.0).
+- The editor installed with the `editor` extra is pinned to 0.130.0.
+
+### Editor 130
+
+#### Added
+
+- With the "Rich text inputs" beta feature on (Settings → "Beta Features"), a text field can reference
+  the parameters of other nodes in the same flow, except nodes inside ForEach, ForLoop and While
+  groups. Typing `{` and part of a node's name lists the nodes, and typing `.` after one lists its
+  parameters that have an output, so `{node.parameter}` can be picked instead of typed. Picking a
+  parameter that has no variable yet, or hovering one, offers "Add variable and connect node" and
+  shows the parameter's current value. Enter confirms it, and the prompt closes at once while a
+  placeholder node shows where the new node will go. It creates a variable of that name from that
+  value and adds a "Create Variable: node.parameter" node to the right of the parameter, connected
+  to it. The variable holds the value from the last time the whole flow ran, so a change to the
+  source shows up on the next run.
+- **Settings → Node Settings → Dot Size** scales Dot nodes and their ports on the canvas, from half
+  to three times the default size.
+- The "Connect" tab of the engine picker has an "Organization" dropdown when you belong to more than
+  one organization. It lists that organization's engines, and "Generate API Key" creates keys in it.
+- "Add to Griptape Nodes" links can pin a library to a branch, tag, or commit with a `ref`
+  parameter, for example `#library-management?git=<repo>&ref=stable`. The ref fills in **Branch /
+  Tag / Commit** under **Advanced Options** and is the version that gets installed.
+- Settings → "Libraries" now has a filter box for each library list ("Libraries To Register" and
+  "Libraries To Download"), so a long list of installed libraries can be narrowed down by path or
+  git repository instead of scrolling.
+- The chat sidebar's "MCP servers" dropdown lists loaded node libraries that come with their own
+  tools under "Libraries". Picking one gives the agent those tools for the conversation. Needs
+  engine 0.107.0 or later.
+- Dropping a connection on a `ParameterList` handle that does not accept the dragged type now shows
+  a short warning naming the accepted types, instead of attempting the connection.
+- A list entry that holds a whole connected list now shows a list icon and, once the upstream node
+  has run, its item count, so it is no longer mistaken for a single item.
+- The run toolbar's **Cancel Run** button shows a count of the runs waiting their turn: behind the
+  run in progress, or in line on another computer your workflow sends nodes to. Hover it to see
+  them in the order they will start. Needs an engine that queues runs.
+- The refresh button on the Workflows page also re-checks registered projects, so projects on a
+  drive that mounted after the engine started show up without restarting the engine. Needs engine
+  0.107.0 or later.
+- Expired license keys can be reissued from Admin Dashboard → "License Keys" with a new
+  expiration date, which reactivates them and keeps their access groups and permission templates.
+- **Add Parameter → Type → Sequence** declares an image-sequence parameter.
+- Custom widgets can declare `synced_parameters`. The widget reads those parameters' values and
+  commits to them directly, so a node no longer copies them into the widget's own value. Dragging
+  the widget moves the parameters' controls live, scrubbing a synced number or color parameter moves
+  the widget, and parameters with an incoming connection are locked. Needs an engine that sends
+  `synced_parameters`.
+
+#### Changed
+
+- **Breaking:** The editor needs engine 0.107.0 or later and asks you to update older engines
+  instead of connecting. From 0.107.0 the engine names itself on every reply, which the editor
+  needs to know which engine holds a restored session.
+- The hosted editor finds engines through the Griptape Cloud engine registry instead of engine
+  heartbeats, so the engine picker shows only the selected organization's engines.
+- A selected Dot node's ports are larger, so wires can be dragged to and from them without
+  zooming in.
+- The Libraries modal's filter now matches a library's description, file path, and git repository
+  as well as its name, so a library can be found by where it came from or what it does.
+- In Library Management, "Reset" now shows on the row of any library marked "Problems" or "Failed
+  to load", next to that label, so it no longer takes expanding the row to find it. Links in a
+  library's problem details now open in the browser.
+- The "Reissue token" button on Admin Dashboard → "License Keys" now asks for confirmation before
+  replacing an active key's token, and can set a new expiration date at the same time.
+- Clicking "+" or "−" on a list entry, or dropping a connection on a list, now updates the node
+  right away, with a dimmed placeholder entry and a dashed edge, instead of waiting for the engine
+  to answer, which was slow on a distant engine. Removing a connected entry also removes its edge
+  immediately.
+- The editor now lazy loads heavy components, like the 3D and splat viewers, the image, crop, and
+  mask editors, and Arrange Graph, the first time you use them.
+- Every `ParameterList` and `ParameterGroup` header (such as the OpenAI Image Generation node's
+  "Input Images" list) now shows its collapse chevron on the right instead of the left, and its
+  connection handle stays visible on the left in both the collapsed and expanded states, including
+  on an empty list with no items yet. The same handle accepts a single item or a whole list in one
+  drop, adding each as a new entry labelled with its source while connected (for example "Load
+  Image · image"), so you
+  no longer connect through the separate "Add Item" row. To add an empty entry without a connection,
+  click the "+" at the bottom of the list. It appears only on lists whose entries you can fill in:
+  text, numbers, true/false, dict and JSON. Other lists, such as Create List and Create Image List,
+  now gain entries only through connections. A dropped list adds its items to the list instead of
+  replacing it, so you can connect several lists. A list that can hold any type, such as Create
+  List, keeps a dropped list as one item. With an engine older than 0.107.0, a dropped single
+  item still becomes a new entry, but a dropped list connects to the list itself, as before. The
+  handle keeps its "ready for another connection" look (not a filled, "used up" dot) after the
+  first drop, since it keeps accepting more.
+  Removing an entry's connection now leaves the entry in place, collapsed or not, so the list keeps
+  its order. Previously an entry in a collapsed list was deleted along with its connection.
+
+#### Fixed
+
+- In the chat sidebar, opening a thread whose last run used a model, provider, or MCP server that
+  is no longer available now shows a warning icon beside the model picker, once. Clicking it names
+  the thread and says what each setting switched to; the switch is kept as that thread's setting.
+  It no longer repeats on every visit and engine start, and clears when you dismiss it or pick new
+  settings. A retired model with a set replacement moves to it without a warning.
+- The choice list on a parameter that allows custom values no longer closes when you drag its
+  scrollbar.
+- The minus button on a connection removes it immediately. It used to sometimes do nothing until you
+  clicked elsewhere, because it relied on simulated clicks and key presses.
+- Digits in the editor no longer render dimmed and spaced out (`PXR24` as `PXR 2 4`) on Linux machines
+  without any of the default UI fonts installed.
+- A node dragged over a Dot node now covers the Dot, the same way it covers the Dot's wires.
+- The editor no longer re-renders every 5 seconds when the engine checks in with nothing new to
+  report, which removes a periodic stutter, worst on canvases with 3D nodes.
+- File browser errors, such as a folder that can't be opened or a rename that fails, now show the
+  engine's reason instead of a generic "Failed to …" message.
+- The file browser now shows the error when the first folder it opens can't be read, such as a
+  permission error, instead of spinning forever.
+- The file browser now keeps the sort you chose when you open another folder, instead of resetting
+  the listing to folders first.
+- When a path the file browser tries to open no longer exists, it now falls back to the parent
+  folder instead of jumping to the root.
+- "New File" and "New Directory" in the file browser now pick a name that doesn't clash with the
+  items in the folder you are viewing, instead of one chosen from the previous folder's items.
+- In Model Management, completed entries under "Downloads" now show an X ("Clear from list")
+  instead of a red trash icon, since clearing one leaves the model installed, and a "Clear completed"
+  button clears them all. Active and paused downloads show a stop icon ("Cancel download").
+- The right-hand Sidebar Panels region no longer sometimes renders blank with an unresponsive panel
+  toggle after collapsing and re-expanding it, dragging its resize separator, or returning to the
+  editor after navigating away (e.g. in the desktop app).
+- After pressing Escape to close the variable picker in a text input, typing inside the same `{`
+  no longer reopens it on every keystroke.
+- The workflow browser now remembers the sort you picked (column and direction) for each section,
+  instead of going back to "Modified" newest first every time it reopens.
+
+### Desktop 0.30.0
+
+#### Added
+
+- License users can connect through Griptape Cloud to engines on other machines that use the same license.
+
+#### Changed
+
+- The bundled version of the Griptape Nodes app has been updated to `0.104.0`, with engine `0.108.0` and editor `0.130.0`.
+- When you sign in with a Griptape account, the app now connects straight to the engine on your computer instead of going through Griptape Cloud. Engines on other machines are still reached through Griptape Cloud.
+- Only the engine you're connected to can be renamed from **Manage Engines**.
+- The **Direct Engine WebSocket URL** setting is now shown for every account, since the app always uses it to reach the engine on your computer.
+- The editor now comes from the engine you're using. The engine on your computer serves its own matching editor, and engines on other machines open in the latest Griptape Nodes web editor, so the editor always fits the engine it's connected to.
+
+#### Fixed
+
+- When the engine rejects the license at startup, the error now explains the issue and offers a shortcut to license settings.
+- The Admin Dashboard window no longer always shows horizontal and vertical scrollbars, or an empty band at the top on Linux.
+- GPU usage and VRAM in the system resources panel no longer stay at N/A for the rest of the session after `nvidia-smi` fails once, such as during a GPU out-of-memory error.
+
 ## 2026-11-06
 
 ### [Engine 0.107.0](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.106.0...v0.107.0)
@@ -197,6 +436,14 @@
   now show this run's value instead of the previous run's.
   [#5753](https://github.com/griptape-ai/griptape-nodes-engine/issues/5753)
   [#5747](https://github.com/griptape-ai/griptape-nodes-engine/issues/5747)
+
+## 2026-11-03
+
+### Desktop 0.29.1
+
+#### Fixed
+
+- Images in nodes no longer stay blank, or keep pulsing, after a run or a reload. This happened when the app rejoined its previous session before Griptape Cloud listed that session.
 
 ## 2026-11-02
 

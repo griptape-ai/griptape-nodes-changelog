@@ -2,6 +2,15 @@
 
 # Griptape Nodes Changelog
 
+## 2026-11-11
+
+### Desktop 0.30.1
+
+#### Fixed
+
+- When the app reopens a session on an engine that is now offline, such as one on another machine, it no longer says "Can't reach your engine" about the engine on this computer. It says it can't reach the engine you last used and offers **Use this computer's engine**.
+- With a custom Griptape server endpoint, the engine no longer keeps trying to reach a relay the server doesn't serve. Turn on **Route relay traffic through this server** in Settings once your administrator has enabled the relay on the admin server, or set `GTN_DESKTOP_ROUTE_RELAY_THROUGH_SERVER`.
+
 ## 2026-11-10
 
 ### [Engine 0.108.0](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.107.0...v0.108.0)

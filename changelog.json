@@ -8,6 +8,157 @@
   ],
   "releases": [
     {
+      "id": "engine@0.109.0",
+      "component": "Engine",
+      "version": "0.109.0",
+      "date": "2026-11-11",
+      "yanked": false,
+      "url": "https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.108.0...v0.109.0",
+      "summary": null,
+      "changes": [
+        {
+          "type": "Added",
+          "entries": [
+            {
+              "text": "`AppInitializationComplete` now includes `engine_run_id`, so a client can tell when the engine\nrestarted without waiting for a heartbeat.\n[#6213](https://github.com/griptape-ai/griptape-nodes-engine/issues/6213)",
+              "breaking": false
+            },
+            {
+              "text": "`CloseWorkflowRequest`, also an MCP tool, closes an open workflow.\n[#6205](https://github.com/griptape-ai/griptape-nodes-engine/issues/6205)",
+              "breaking": false
+            },
+            {
+              "text": "`DescribeNodeTypeRequest` takes `include_metadata`, `include_tooltips`, and `include_ui_options`,\nso callers can leave those parts out of the response.\n[#5919](https://github.com/griptape-ai/griptape-nodes-engine/issues/5919)",
+              "breaking": false
+            },
+            {
+              "text": "`ListOpenWorkflowsRequest`, also an MCP tool, lists the open workflows.\n[#6221](https://github.com/griptape-ai/griptape-nodes-engine/issues/6221)",
+              "breaking": false
+            },
+            {
+              "text": "ForEach Group and ForLoop Group have a \"Flatten Results\" setting that merges the lists each\niteration returns into one flat `results` list. \"Flatten Depth\" limits how many levels it\nflattens.\n[#6315](https://github.com/griptape-ai/griptape-nodes-engine/issues/6315)",
+              "breaking": false
+            },
+            {
+              "text": "The engine can keep several workflows open at once, one per editor tab. Opening a workflow no\nlonger closes the one already open.\nSee [Transports](https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/docs/guides/transports.md#open-workflows).\n[#6231](https://github.com/griptape-ai/griptape-nodes-engine/issues/6231)",
+              "breaking": false
+            },
+            {
+              "text": "Open workflows reported to clients, such as in the heartbeat's `open_workflows`, now include\n`display_name` and `is_saved`.\n[#6221](https://github.com/griptape-ai/griptape-nodes-engine/issues/6221)",
+              "breaking": false
+            },
+            {
+              "text": "`OpenWorkflowRequest`, also an MCP tool, opens a saved workflow or a new unsaved one alongside\nany already open.\n[#6221](https://github.com/griptape-ai/griptape-nodes-engine/issues/6221)\n[#6241](https://github.com/griptape-ai/griptape-nodes-engine/issues/6241)",
+              "breaking": false
+            },
+            {
+              "text": "Results of requests that open, load, or save a workflow now include `open_workflow`, the workflow\nopen after the request.\n[#6199](https://github.com/griptape-ai/griptape-nodes-engine/issues/6199)",
+              "breaking": false
+            },
+            {
+              "text": "`SaveWorkflowRequest` takes `continue_in_copy`, which keeps you working in the new file after a\nSave As or versioned save. See [Transports](https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/docs/guides/transports.md#open-workflows).\n[#6228](https://github.com/griptape-ai/griptape-nodes-engine/issues/6228)",
+              "breaking": false
+            },
+            {
+              "text": "Requests about a saved workflow, such as `RenameWorkflowRequest` and `DeleteWorkflowRequest`, now\ntake a `workflow_id`, which stays the same when the workflow is renamed or moved. See\n[Transports](https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/docs/guides/transports.md#open-workflows) for the full list.\n[#6227](https://github.com/griptape-ai/griptape-nodes-engine/issues/6227)",
+              "breaking": false
+            },
+            {
+              "text": "Clients now receive `WorkflowOpenedEvent` and `WorkflowClosedEvent` when a workflow opens or\ncloses. See [Transports](https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/docs/guides/transports.md#getting-results-back).\n[#6213](https://github.com/griptape-ai/griptape-nodes-engine/issues/6213)",
+              "breaking": false
+            },
+            {
+              "text": "`WorkflowNotOpenResultFailure` now lists the open workflows in `open_workflows`.\n[#6234](https://github.com/griptape-ai/griptape-nodes-engine/issues/6234)",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "**Breaking:** `ExecutionEvent` and `ProgressEvent` now name their workflow in `open_workflow_id`\ninstead of `workflow_id`, matching results.\nSee [MIGRATION.md](https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/MIGRATION.md#execution-events-name-their-workflow-in-open_workflow_id).\n[#6240](https://github.com/griptape-ai/griptape-nodes-engine/issues/6240)",
+              "breaking": true
+            },
+            {
+              "text": "**Breaking:** `EngineHeartbeatResultSuccess.current_workflow_id` is removed. Read\n`open_workflows` instead.\n[#6261](https://github.com/griptape-ai/griptape-nodes-engine/issues/6261)",
+              "breaking": true
+            },
+            {
+              "text": "Starting the engine, switching projects, and refreshing the workflow registry are faster on\nprojects with many workflows. Scanning 500 workflows takes about 280 ms instead of 770 ms.",
+              "breaking": false
+            },
+            {
+              "text": "Opening a Griptape-provided workflow now opens an unsaved copy.\n[#6229](https://github.com/griptape-ai/griptape-nodes-engine/issues/6229)",
+              "breaking": false
+            },
+            {
+              "text": "An MCP session without an `X-Griptape-Workflow-Id` header now stays on the workflow it last used,\ninstead of moving to another open workflow when that one closes.\n[#6234](https://github.com/griptape-ai/griptape-nodes-engine/issues/6234)",
+              "breaking": false
+            },
+            {
+              "text": "`RunWorkflowFromScratchRequest` and `RunWorkflowFromRegistryRequest` now ignore the envelope's\n`open_workflow_id`, so they no longer fail when it names a closed workflow.\n[#6198](https://github.com/griptape-ai/griptape-nodes-engine/issues/6198)",
+              "breaking": false
+            },
+            {
+              "text": "`RequestClient` now receives results on its own topic instead of the `response` topic every\nconnected editor receives.\n[#6240](https://github.com/griptape-ai/griptape-nodes-engine/issues/6240)",
+              "breaking": false
+            },
+            {
+              "text": "A result's `open_workflow_id` is now `null` for requests about the engine rather than one\nworkflow, such as `ClearAllObjectStateRequest`, instead of echoing the id the request was sent\nwith. See [Transports](https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/docs/guides/transports.md#getting-results-back).\n[#6213](https://github.com/griptape-ai/griptape-nodes-engine/issues/6213)",
+              "breaking": false
+            },
+            {
+              "text": "Requests that name no workflow, sent from an MCP session without one or directly to an `Engine`,\nnow act on none. Requests that need a workflow fail with `WorkflowNotNamedResultFailure` instead\nof answering as if it were empty. Node library code that reads the current workflow from a thread\nit started itself now finds none. Start the thread with `asyncio.to_thread` to keep the node's\nworkflow.\n[#6235](https://github.com/griptape-ai/griptape-nodes-engine/issues/6235)",
+              "breaking": false
+            },
+            {
+              "text": "`SetWorkflowContextRequest` and `EnsureWorkflowAndFlowRequest` now fail for an unknown `unsaved:`\nname instead of creating a workflow for it.\n[#6221](https://github.com/griptape-ai/griptape-nodes-engine/issues/6221)",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Removed",
+          "entries": [
+            {
+              "text": "**Breaking:** The MCP server and chat agent no longer offer `ExecuteNodeRequest` as a tool. Use\n`ResolveNodeRequest` to run a single node.",
+              "breaking": true
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "A closed unsaved workflow no longer stays in the workflow list or reopens as an empty canvas.\n[#6232](https://github.com/griptape-ai/griptape-nodes-engine/issues/6232)",
+              "breaking": false
+            },
+            {
+              "text": "`SetWorkflowContextRequest` and `EnsureWorkflowAndFlowRequest` no longer open a saved workflow\nwithout its nodes, which made the next save erase the file.\n[#6221](https://github.com/griptape-ai/griptape-nodes-engine/issues/6221)",
+              "breaking": false
+            },
+            {
+              "text": "Deleting the current flow by name no longer leaves the engine sending requests to the deleted\nflow until it restarts.\n[#6305](https://github.com/griptape-ai/griptape-nodes-engine/issues/6305)",
+              "breaking": false
+            },
+            {
+              "text": "Directory parameters set to an absolute, `~`, or `file://` path containing `{###}`, such as\n`/renders/shot_v{###}`, now create the next free version folder instead of failing with\n\"missing required variables: _index\".\n[griptape-nodes-library-standard#945](https://github.com/griptape-ai/griptape-nodes-library-standard/issues/945)",
+              "breaking": false
+            },
+            {
+              "text": "A workflow file that fails to load no longer stays open half built, blocking the next workflow\nfrom opening.\n[#6260](https://github.com/griptape-ai/griptape-nodes-engine/issues/6260)",
+              "breaking": false
+            },
+            {
+              "text": "Renaming a workflow that isn't open no longer saves the open workflow under the new name and\ndeletes the renamed workflow's file.\n[#6227](https://github.com/griptape-ai/griptape-nodes-engine/issues/6227)",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "desktop@0.30.1",
       "component": "Desktop",
       "version": "0.30.1",

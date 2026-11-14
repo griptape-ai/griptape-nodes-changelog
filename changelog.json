@@ -8,6 +8,68 @@
   ],
   "releases": [
     {
+      "id": "engine@0.110.0",
+      "component": "Engine",
+      "version": "0.110.0",
+      "date": "2026-11-13",
+      "yanked": false,
+      "url": "https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.109.0...v0.110.0",
+      "summary": null,
+      "changes": [
+        {
+          "type": "Added",
+          "entries": [
+            {
+              "text": "The chat agent can now read library docs.",
+              "breaking": false
+            },
+            {
+              "text": "Libraries can now ship their own docs in a `docs/` folder next to their manifest. See\n[Writing Docs for Your Library](https://docs.griptapenodes.com/en/stable/development/custom_nodes/library_documentation/).",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "Scanning workflows (project switch, engine start, registry refresh) now sends at most ten\n`EngineInitializationProgress` events a second instead of two per workflow. Failures and the\nfinal event are still sent, so clients that counted every per-workflow event receive fewer.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "Load 3D's Save Snapshot fills the node's `image` output again: a serialized artifact dict\nkeeps its `metadata` when it's normalized into an artifact.\n[#6311](https://github.com/griptape-ai/griptape-nodes-engine/issues/6311)",
+              "breaking": false
+            },
+            {
+              "text": "`Workflow Node`s that run at the same time, in parallel branches or in a loop set to\n\"Run Group Items All at Once\", now each load their workflow into a flow of their own. Before,\none node could silently load the same copy of the workflow as another node, or load its copy\ninto the wrong flow, so the run could use another node's workflow without any error.\n[#5665](https://github.com/griptape-ai/griptape-nodes-engine/issues/5665)",
+              "breaking": false
+            },
+            {
+              "text": "Deleting a node while its workflow is running, or deleting two nodes at the same time, no longer\nlets other requests see the node being deleted as the current node, or mix up which node each\ndelete is working on.\n[#5665](https://github.com/griptape-ai/griptape-nodes-engine/issues/5665)",
+              "breaking": false
+            },
+            {
+              "text": "The editor can again switch projects, open workflows, and create workflows. Requests that name no\nworkflow act on the only open workflow again, instead of failing with \"the request names no\nworkflow\".",
+              "breaking": false
+            },
+            {
+              "text": "End Flow's `result_details` now shows only the current run's `[SUCCEEDED]` or `[FAILED]` status.\nBefore, it added another status line on every run when nothing was connected to it, and saving\nkept the extra lines in the workflow.\n[#6304](https://github.com/griptape-ai/griptape-nodes-engine/issues/6304)",
+              "breaking": false
+            },
+            {
+              "text": "Running a node again while another node is still running no longer fails with only the node's\nname as the error. Before, the node also refused every later run until the other node finished,\nand then ran by itself anyway.\n[#5562](https://github.com/griptape-ai/griptape-nodes-engine/issues/5562)",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "engine@0.109.0",
       "component": "Engine",
       "version": "0.109.0",

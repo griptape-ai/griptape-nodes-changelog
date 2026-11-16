@@ -2,6 +2,59 @@
 
 # Griptape Nodes Changelog
 
+## 2026-11-16
+
+### [Engine 0.111.0](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.110.0...v0.111.0)
+
+#### Changed
+
+- **Breaking:** In a library's worker process, `GRIPTAPE_NODES_LICENSE` and `GT_CLOUD_API_KEY` are
+  empty in `os.environ`, and setting a secret fails. Read secrets with
+  `GriptapeNodes.SecretsManager().get_secret(...)`, and pass a Griptape Cloud driver its key from
+  `resolve_cloud_credential`. See
+  [Node isolation with workers](https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/docs/development/custom_nodes/node_isolation_with_workers.md#secrets-and-griptape-cloud-credentials).
+- A library's nodes sent to another computer with `distributed_execution.library_engines` now run
+  on your workstation's license session instead of that computer's license: your license decides
+  what they may do, and their Griptape Cloud calls authenticate as your session. A workstation with
+  a Griptape Cloud API key and no license still uses the other computer's `GT_CLOUD_API_KEY` for
+  those calls. Two computers can now each run a library for the other.
+- A library's worker process now needs only the `griptape-nodes-engine` package and the library's
+  own dependencies, not the Griptape Nodes app, and starts as soon as its library loads. See
+  [Managed Environments](https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/docs/guides/managed_environment.md#workercommand_prefix).
+- A library's worker now asks the engine it works for which project it is on, when it starts and
+  whenever that engine switches projects, instead of being sent the project. Several switches in
+  quick succession cost the worker at most two project changes, and it lands on the newest.
+  `ActivateProjectRequest` no longer has `project_id` or `generation`.
+
+#### Removed
+
+- The `worker.heartbeat_interval_s` and `worker.heartbeat_timeout_s` settings are gone, along with
+  their `GTN_CONFIG_WORKER__HEARTBEAT_*` environment variables. Library workers are no longer sent
+  heartbeats: an engine knows a worker has stopped the moment its process does. A value left in a
+  config file is ignored.
+- The requests a library's worker used to send its engine are gone: `RegisterWorkerRequest`,
+  `UnregisterWorkerRequest`, `WorkerHeartbeatRequest`, `ReportLibraryLoadedRequest` and
+  `ReportGeneralPurposeWorkerReadyRequest`. A worker is now its engine's own child process: it
+  reports what it loaded in its hello, and the engine knows it stopped the moment its process does.
+  No client sends any of these, and nothing replaces them.
+
+#### Fixed
+
+- When a workflow fails to import into a Workflow node or into the editor, the flows and nodes it
+  had already built are now removed. They no longer stay in your workflow or get written into the
+  saved file, and trying again gives the same names instead of higher-numbered ones each time.
+  [#5665](https://github.com/griptape-ai/griptape-nodes-engine/issues/5665)
+- A library's worker process no longer stops while it starts because the engine it works for is
+  busy for more than 30 seconds, which logged "This engine's role failed fatally" and left the
+  library's nodes unable to run. A starting worker now waits for as long as that engine is running,
+  including a worker one engine runs for another.
+- Publishing a workflow or exporting a project no longer copies a library's `.venv-dev` dev
+  environment into the bundle, alongside the `.venv` and `.venv-exec` it already left out.
+  [#6327](https://github.com/griptape-ai/griptape-nodes-engine/issues/6327)
+- Workflow nodes from a library that declares execution dependencies now run, instead of failing
+  with an error that a flow doesn't exist.
+  [#5665](https://github.com/griptape-ai/griptape-nodes-engine/issues/5665)
+
 ## 2026-11-13
 
 ### [Engine 0.110.0](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.109.0...v0.110.0)

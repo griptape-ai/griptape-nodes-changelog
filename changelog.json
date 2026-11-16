@@ -8,6 +8,72 @@
   ],
   "releases": [
     {
+      "id": "engine@0.111.0",
+      "component": "Engine",
+      "version": "0.111.0",
+      "date": "2026-11-16",
+      "yanked": false,
+      "url": "https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.110.0...v0.111.0",
+      "summary": null,
+      "changes": [
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "**Breaking:** In a library's worker process, `GRIPTAPE_NODES_LICENSE` and `GT_CLOUD_API_KEY` are\nempty in `os.environ`, and setting a secret fails. Read secrets with\n`GriptapeNodes.SecretsManager().get_secret(...)`, and pass a Griptape Cloud driver its key from\n`resolve_cloud_credential`. See\n[Node isolation with workers](https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/docs/development/custom_nodes/node_isolation_with_workers.md#secrets-and-griptape-cloud-credentials).",
+              "breaking": true
+            },
+            {
+              "text": "A library's nodes sent to another computer with `distributed_execution.library_engines` now run\non your workstation's license session instead of that computer's license: your license decides\nwhat they may do, and their Griptape Cloud calls authenticate as your session. A workstation with\na Griptape Cloud API key and no license still uses the other computer's `GT_CLOUD_API_KEY` for\nthose calls. Two computers can now each run a library for the other.",
+              "breaking": false
+            },
+            {
+              "text": "A library's worker process now needs only the `griptape-nodes-engine` package and the library's\nown dependencies, not the Griptape Nodes app, and starts as soon as its library loads. See\n[Managed Environments](https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/docs/guides/managed_environment.md#workercommand_prefix).",
+              "breaking": false
+            },
+            {
+              "text": "A library's worker now asks the engine it works for which project it is on, when it starts and\nwhenever that engine switches projects, instead of being sent the project. Several switches in\nquick succession cost the worker at most two project changes, and it lands on the newest.\n`ActivateProjectRequest` no longer has `project_id` or `generation`.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Removed",
+          "entries": [
+            {
+              "text": "The `worker.heartbeat_interval_s` and `worker.heartbeat_timeout_s` settings are gone, along with\ntheir `GTN_CONFIG_WORKER__HEARTBEAT_*` environment variables. Library workers are no longer sent\nheartbeats: an engine knows a worker has stopped the moment its process does. A value left in a\nconfig file is ignored.",
+              "breaking": false
+            },
+            {
+              "text": "The requests a library's worker used to send its engine are gone: `RegisterWorkerRequest`,\n`UnregisterWorkerRequest`, `WorkerHeartbeatRequest`, `ReportLibraryLoadedRequest` and\n`ReportGeneralPurposeWorkerReadyRequest`. A worker is now its engine's own child process: it\nreports what it loaded in its hello, and the engine knows it stopped the moment its process does.\nNo client sends any of these, and nothing replaces them.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "When a workflow fails to import into a Workflow node or into the editor, the flows and nodes it\nhad already built are now removed. They no longer stay in your workflow or get written into the\nsaved file, and trying again gives the same names instead of higher-numbered ones each time.\n[#5665](https://github.com/griptape-ai/griptape-nodes-engine/issues/5665)",
+              "breaking": false
+            },
+            {
+              "text": "A library's worker process no longer stops while it starts because the engine it works for is\nbusy for more than 30 seconds, which logged \"This engine's role failed fatally\" and left the\nlibrary's nodes unable to run. A starting worker now waits for as long as that engine is running,\nincluding a worker one engine runs for another.",
+              "breaking": false
+            },
+            {
+              "text": "Publishing a workflow or exporting a project no longer copies a library's `.venv-dev` dev\nenvironment into the bundle, alongside the `.venv` and `.venv-exec` it already left out.\n[#6327](https://github.com/griptape-ai/griptape-nodes-engine/issues/6327)",
+              "breaking": false
+            },
+            {
+              "text": "Workflow nodes from a library that declares execution dependencies now run, instead of failing\nwith an error that a flow doesn't exist.\n[#5665](https://github.com/griptape-ai/griptape-nodes-engine/issues/5665)",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "engine@0.110.0",
       "component": "Engine",
       "version": "0.110.0",

@@ -2,6 +2,92 @@
 
 # Griptape Nodes Changelog
 
+## 2026-11-18
+
+### [Engine 0.108.1](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.108.0...v0.108.1)
+
+#### Changed
+
+- Video features now use `ffmpeg` and `ffprobe` from your `PATH` when both are installed, instead
+  of downloading their own copy, so they work on networks that block the download. Binaries
+  supplied through the `ffmpeg_directory` setting still take priority over `PATH`.
+
+#### Fixed
+
+- Load 3D's Save Snapshot fills the node's `image` output again: a serialized artifact dict
+  keeps its `metadata` when it's normalized into an artifact.
+  [#6311](https://github.com/griptape-ai/griptape-nodes-engine/issues/6311)
+- Reloading libraries, switching projects, or updating a library no longer marks a library that
+  registers an artifact provider as flawed with a "duplicate friendly name" error. Unloading a
+  library now removes its artifact providers, so the next load registers its current provider code.
+  [#6307](https://github.com/griptape-ai/griptape-nodes-engine/issues/6307)
+- Deleting the current flow with `DeleteFlowRequest(flow_name=...)` no longer leaves it as the
+  current flow, which sent later requests to a flow that no longer existed until the engine
+  restarted. [#6305](https://github.com/griptape-ai/griptape-nodes-engine/issues/6305)
+- A directory parameter set to an absolute, `~`, or `file://` folder containing `{###}`, such as
+  `/renders/shot_v{###}`, now creates the next free version (`shot_v001`, `shot_v002`, ...)
+  instead of failing with "missing required variables: _index". A folder without `{###}` is still
+  used exactly as given.
+  [griptape-nodes-library-standard#945](https://github.com/griptape-ai/griptape-nodes-library-standard/issues/945)
+- End Flow's `result_details` now shows only the current run's `[SUCCEEDED]` or `[FAILED]` status.
+  Before, it added another status line on every run when nothing was connected to it, and saving
+  kept the extra lines in the workflow.
+  [#6304](https://github.com/griptape-ai/griptape-nodes-engine/issues/6304)
+- Running a node again while another node is still running no longer fails with only the node's
+  name as the error. Before, the node also refused every later run until the other node finished,
+  and then ran by itself anyway.
+  [#5562](https://github.com/griptape-ai/griptape-nodes-engine/issues/5562)
+- On Windows, a second Griptape Nodes process no longer takes a port the first one is already
+  serving on. Both processes previously advertised the same address while only one answered, so
+  files saved by one — a diagnostics bundle, a generated image — could come back as "not found"
+  in the editor. A server that has to move to another port because the one it asked for is taken
+  now logs a warning naming both ports.
+  [#6186](https://github.com/griptape-ai/griptape-nodes-engine/issues/6186)
+
+### Editor 130.2
+
+#### Changed
+
+- The Group Settings popover now lists settings as flat rows, with no box around each one until
+  you hover or focus it, so more settings fit before it scrolls. The `execution_environment`
+  setting is now labeled "Execution Environment".
+- Switching projects in the Load Workflow modal now requests the new project's workflow list as soon
+  as the engine confirms the switch, while the project refresh is still running, instead of after it
+  finishes.
+- Node header and minimap colors now come from Tailwind's own palette, so every color a node
+  library declares resolves instead of only the ones listed in the editor. Existing category colors
+  shift very slightly, because the editor was drawing Tailwind v3 values for classes that render as
+  v4 everywhere else.
+- Error details panels, such as the one a failed node opens, show the circular error icon, matching
+  the "Error" pill.
+
+#### Fixed
+
+- Nodes in the Audio, Convert, Dict, Execution flow, Misc, Tasks, Text, Video, Workflows and
+  Griptape Nodes Sandbox categories now draw their category color on the minimap instead of gray,
+  and Audio, Dict, Execution flow, Video and Griptape Nodes Sandbox node headers use it instead of
+  falling back to gray with a warning in the logs. Colors a node library declares now resolve too,
+  rather than only the ones the editor happened to list.
+- In the chat sidebar, the "Copy" button under an earlier reply no longer disappears when the
+  cursor reaches it while its tooltip opens.
+- On a group's side rails, a parameter whose only port is on its right now has its label next to
+  that port, so it's clear which side it connects on.
+- Switching projects in the Load Workflow modal now hides the old project's workflows as soon as you
+  confirm the switch. Before, they stayed on screen, and clickable, until the engine started
+  switching.
+- The local editor no longer sends a usage report to the engine's WebSocket port on load, which
+  made the engine log "WebSocket handshake failed: … only GET is allowed".
+- Misc nodes now show a gray icon background in Properties and the agent sidebar, matching their
+  gray node header and minimap dot instead of drawing indigo.
+
+### Editor 130.1
+
+#### Changed
+
+- The Admin Dashboard's engine, project, library and model pickers now read what each engine
+  published to Griptape Cloud, so they work for offline engines and engines this browser cannot
+  reach. Engines that have not published fall back to asking the engine directly.
+
 ## 2026-11-17
 
 ### App 0.104.1

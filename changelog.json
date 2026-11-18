@@ -8,6 +8,140 @@
   ],
   "releases": [
     {
+      "id": "engine@0.108.1",
+      "component": "Engine",
+      "version": "0.108.1",
+      "date": "2026-11-18",
+      "yanked": false,
+      "url": "https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.108.0...v0.108.1",
+      "summary": null,
+      "changes": [
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "Video features now use `ffmpeg` and `ffprobe` from your `PATH` when both are installed, instead\nof downloading their own copy, so they work on networks that block the download. Binaries\nsupplied through the `ffmpeg_directory` setting still take priority over `PATH`.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "Load 3D's Save Snapshot fills the node's `image` output again: a serialized artifact dict\nkeeps its `metadata` when it's normalized into an artifact.\n[#6311](https://github.com/griptape-ai/griptape-nodes-engine/issues/6311)",
+              "breaking": false
+            },
+            {
+              "text": "Reloading libraries, switching projects, or updating a library no longer marks a library that\nregisters an artifact provider as flawed with a \"duplicate friendly name\" error. Unloading a\nlibrary now removes its artifact providers, so the next load registers its current provider code.\n[#6307](https://github.com/griptape-ai/griptape-nodes-engine/issues/6307)",
+              "breaking": false
+            },
+            {
+              "text": "Deleting the current flow with `DeleteFlowRequest(flow_name=...)` no longer leaves it as the\ncurrent flow, which sent later requests to a flow that no longer existed until the engine\nrestarted. [#6305](https://github.com/griptape-ai/griptape-nodes-engine/issues/6305)",
+              "breaking": false
+            },
+            {
+              "text": "A directory parameter set to an absolute, `~`, or `file://` folder containing `{###}`, such as\n`/renders/shot_v{###}`, now creates the next free version (`shot_v001`, `shot_v002`, ...)\ninstead of failing with \"missing required variables: _index\". A folder without `{###}` is still\nused exactly as given.\n[griptape-nodes-library-standard#945](https://github.com/griptape-ai/griptape-nodes-library-standard/issues/945)",
+              "breaking": false
+            },
+            {
+              "text": "End Flow's `result_details` now shows only the current run's `[SUCCEEDED]` or `[FAILED]` status.\nBefore, it added another status line on every run when nothing was connected to it, and saving\nkept the extra lines in the workflow.\n[#6304](https://github.com/griptape-ai/griptape-nodes-engine/issues/6304)",
+              "breaking": false
+            },
+            {
+              "text": "Running a node again while another node is still running no longer fails with only the node's\nname as the error. Before, the node also refused every later run until the other node finished,\nand then ran by itself anyway.\n[#5562](https://github.com/griptape-ai/griptape-nodes-engine/issues/5562)",
+              "breaking": false
+            },
+            {
+              "text": "On Windows, a second Griptape Nodes process no longer takes a port the first one is already\nserving on. Both processes previously advertised the same address while only one answered, so\nfiles saved by one — a diagnostics bundle, a generated image — could come back as \"not found\"\nin the editor. A server that has to move to another port because the one it asked for is taken\nnow logs a warning naming both ports.\n[#6186](https://github.com/griptape-ai/griptape-nodes-engine/issues/6186)",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "editor@130.2",
+      "component": "Editor",
+      "version": "130.2",
+      "date": "2026-11-18",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "The Group Settings popover now lists settings as flat rows, with no box around each one until\nyou hover or focus it, so more settings fit before it scrolls. The `execution_environment`\nsetting is now labeled \"Execution Environment\".",
+              "breaking": false
+            },
+            {
+              "text": "Switching projects in the Load Workflow modal now requests the new project's workflow list as soon\nas the engine confirms the switch, while the project refresh is still running, instead of after it\nfinishes.",
+              "breaking": false
+            },
+            {
+              "text": "Node header and minimap colors now come from Tailwind's own palette, so every color a node\nlibrary declares resolves instead of only the ones listed in the editor. Existing category colors\nshift very slightly, because the editor was drawing Tailwind v3 values for classes that render as\nv4 everywhere else.",
+              "breaking": false
+            },
+            {
+              "text": "Error details panels, such as the one a failed node opens, show the circular error icon, matching\nthe \"Error\" pill.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "Nodes in the Audio, Convert, Dict, Execution flow, Misc, Tasks, Text, Video, Workflows and\nGriptape Nodes Sandbox categories now draw their category color on the minimap instead of gray,\nand Audio, Dict, Execution flow, Video and Griptape Nodes Sandbox node headers use it instead of\nfalling back to gray with a warning in the logs. Colors a node library declares now resolve too,\nrather than only the ones the editor happened to list.",
+              "breaking": false
+            },
+            {
+              "text": "In the chat sidebar, the \"Copy\" button under an earlier reply no longer disappears when the\ncursor reaches it while its tooltip opens.",
+              "breaking": false
+            },
+            {
+              "text": "On a group's side rails, a parameter whose only port is on its right now has its label next to\nthat port, so it's clear which side it connects on.",
+              "breaking": false
+            },
+            {
+              "text": "Switching projects in the Load Workflow modal now hides the old project's workflows as soon as you\nconfirm the switch. Before, they stayed on screen, and clickable, until the engine started\nswitching.",
+              "breaking": false
+            },
+            {
+              "text": "The local editor no longer sends a usage report to the engine's WebSocket port on load, which\nmade the engine log \"WebSocket handshake failed: … only GET is allowed\".",
+              "breaking": false
+            },
+            {
+              "text": "Misc nodes now show a gray icon background in Properties and the agent sidebar, matching their\ngray node header and minimap dot instead of drawing indigo.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "editor@130.1",
+      "component": "Editor",
+      "version": "130.1",
+      "date": "2026-11-18",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "The Admin Dashboard's engine, project, library and model pickers now read what each engine\npublished to Griptape Cloud, so they work for offline engines and engines this browser cannot\nreach. Engines that have not published fall back to asking the engine directly.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "app@0.104.1",
       "component": "App",
       "version": "0.104.1",

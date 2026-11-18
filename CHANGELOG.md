@@ -2,6 +2,16 @@
 
 # Griptape Nodes Changelog
 
+## 2026-11-17
+
+### App 0.104.1
+
+#### Added
+
+- An engine registered with the engine registry now publishes its libraries, project templates,
+  and model catalog there at startup and after its libraries reload, so the dashboard can show them
+  while the engine is offline. Only project templates that declare an `id` are published.
+
 ## 2026-11-16
 
 ### [Engine 0.111.0](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.110.0...v0.111.0)

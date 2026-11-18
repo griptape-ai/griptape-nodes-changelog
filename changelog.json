@@ -8,6 +8,26 @@
   ],
   "releases": [
     {
+      "id": "app@0.104.1",
+      "component": "App",
+      "version": "0.104.1",
+      "date": "2026-11-17",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Added",
+          "entries": [
+            {
+              "text": "An engine registered with the engine registry now publishes its libraries, project templates,\nand model catalog there at startup and after its libraries reload, so the dashboard can show them\nwhile the engine is offline. Only project templates that declare an `id` are published.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "engine@0.111.0",
       "component": "Engine",
       "version": "0.111.0",

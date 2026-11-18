@@ -44,6 +44,14 @@
   now logs a warning naming both ports.
   [#6186](https://github.com/griptape-ai/griptape-nodes-engine/issues/6186)
 
+### App 0.104.2
+
+#### Changed
+
+- Griptape Nodes Engine is pinned to 0.108.1. See its
+  [release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.108.1).
+- The editor installed with the `editor` extra is pinned to 0.130.2.
+
 ### Editor 130.2
 
 #### Changed
@@ -97,6 +105,16 @@
 - An engine registered with the engine registry now publishes its libraries, project templates,
   and model catalog there at startup and after its libraries reload, so the dashboard can show them
   while the engine is offline. Only project templates that declare an `id` are published.
+
+### Desktop 0.30.2
+
+#### Changed
+
+- The bundled version of the Griptape Nodes app has been updated to `0.104.1`, with engine `0.108.0` and editor `0.130.0`.
+
+#### Fixed
+
+- When the app reopens a session on an engine that is now offline, such as one on another machine, it no longer says "Can't reach your engine" about the engine on this computer. It says it can't reach the engine you last used and offers **Use this computer's engine**.
 
 ## 2026-11-16
 

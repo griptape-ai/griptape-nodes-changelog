@@ -61,6 +61,30 @@
       ]
     },
     {
+      "id": "app@0.104.2",
+      "component": "App",
+      "version": "0.104.2",
+      "date": "2026-11-18",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "Griptape Nodes Engine is pinned to 0.108.1. See its\n[release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.108.1).",
+              "breaking": false
+            },
+            {
+              "text": "The editor installed with the `editor` extra is pinned to 0.130.2.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "editor@130.2",
       "component": "Editor",
       "version": "130.2",
@@ -155,6 +179,35 @@
           "entries": [
             {
               "text": "An engine registered with the engine registry now publishes its libraries, project templates,\nand model catalog there at startup and after its libraries reload, so the dashboard can show them\nwhile the engine is offline. Only project templates that declare an `id` are published.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desktop@0.30.2",
+      "component": "Desktop",
+      "version": "0.30.2",
+      "date": "2026-11-17",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "The bundled version of the Griptape Nodes app has been updated to `0.104.1`, with engine `0.108.0` and editor `0.130.0`.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "When the app reopens a session on an engine that is now offline, such as one on another machine, it no longer says \"Can't reach your engine\" about the engine on this computer. It says it can't reach the engine you last used and offers **Use this computer's engine**.",
               "breaking": false
             }
           ]

@@ -2,7 +2,95 @@
 
 # Griptape Nodes Changelog
 
+## 2026-11-19
+
+### [Engine 0.112.0](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.111.1...v0.112.0)
+
+#### Added
+
+- Situation macros in a project can now use `{media.width}`, `{media.height}`, `{media.fps}`,
+  `{media.duration}`, `{media.codec}`, `{media.channels}` and `{media.color_space}`, read from the
+  image or video being saved, to name files such as `render_1920x1080.png`. See
+  [Situations](https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/docs/guides/projects/situations.md).
+  [#6342](https://github.com/griptape-ai/griptape-nodes-engine/issues/6342)
+- A node's log lines now name the workflow it ran in, so with several workflows open they show only
+  on that workflow.
+  [#6379](https://github.com/griptape-ai/griptape-nodes-engine/issues/6379)
+- Open workflows now report whether they have unsaved changes, a run in progress or waiting, or a
+  failed last run, and `WorkflowStateChangedEvent` announces each change.
+  [#6378](https://github.com/griptape-ai/griptape-nodes-engine/issues/6378)
+- `RequestClient.request` and `RequestClient.request_batch` now take an `open_workflow_id`
+  argument, so a Python script can name the open workflow its requests act on while several
+  workflows are open.
+  [#6381](https://github.com/griptape-ai/griptape-nodes-engine/issues/6381)
+- When a library's worker crashes after loading, for example by running out of memory, the
+  library's next node now starts it again instead of failing until the library is reloaded.
+- `AppGetSessionResultSuccess` now carries `engine_version`, `engine_run_id`, `engine_os`, and
+  `is_initializing`, and `SessionHeartbeatResultSuccess` carries `session_id`, `engine_run_id`, and
+  `is_initializing`, so a client can follow the engine's state without engine discovery.
+
+#### Changed
+
+- **Breaking:** `FlowManager` methods that read the current workflow, such as
+  `check_for_existing_running_flow`, and the `global_*` properties are removed. Use the matching
+  `_in(workflow)` method. `WorkflowManager.run_workflow` now requires a `workflow` argument.
+- **Breaking:** A request that names no flow now acts on the workflow's top-level flow, because
+  requests can no longer make a flow or node current. `set_as_new_context` is ignored, and
+  `ContextManager`'s push and pop methods are removed in favor of its `flow()` and `node()` blocks.
+  See [MIGRATION.md](https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/MIGRATION.md#flow-and-node-context-belongs-to-the-caller).
+- **Breaking:** Requests that work without a workflow, such as resolving a path, now act on no
+  workflow when they name none, instead of the only open one. `EnsureWorkflowAndFlowRequest` and
+  `RunWorkflowWithCurrentStateRequest` naming no workflow now open a new one. Node code sending one
+  from its own thread should use `self.workflow.handle_request(...)`.
+  [#6381](https://github.com/griptape-ai/griptape-nodes-engine/issues/6381)
+- **Breaking:** Requests that act on a workflow, such as `CreateNodeRequest` or `ListRunsRequest`,
+  now fail with `WorkflowNotNamedResultFailure` when they name none, even while only one workflow is
+  open. Send `open_workflow_id` on the request, or the `X-Griptape-Workflow-Id` header from MCP
+  clients. Node code that sends requests from a thread it starts must use
+  `self.workflow.handle_request(...)`.
+  [#6381](https://github.com/griptape-ai/griptape-nodes-engine/issues/6381)
+- `make run` and `make run/refresh` now run your engine checkout with the app's nightly build
+  instead of the published app. Without access to the app's internal repository, use
+  `make run/published`.
+
+#### Removed
+
+- **Breaking:** Manager methods such as `NodeManager.on_get_parameter_value_request(request)` no
+  longer act on the open workflow. Send the request with `GriptapeNodes.handle_request(...)`
+  instead. See
+  [MIGRATION.md](https://github.com/griptape-ai/griptape-nodes-engine/blob/HEAD/MIGRATION.md#managers-no-longer-have-ambient-workflow-request-methods).
+
+#### Fixed
+
+- `EnsureWorkflowAndFlowRequest` no longer marks a workflow as changed when it already had a flow.
+- When another engine has no room for a library's worker, the library's next node now asks again
+  instead of failing with the same "no room" reason until the library is reloaded.
+- Library environments are now created from the Python that runs Griptape Nodes instead of a
+  Python that uv downloads from GitHub, so libraries load on networks that block GitHub
+  release downloads.
+- A node blocked by your license now lists each rule that blocks it on its placeholder and names its
+  real library instead of "Unknown".
+- A node whose text holds a `{...}` token, such as `{inputs}/cat.png` on **Load Image**, no longer
+  runs again, along with the nodes below it, on every play or Run when nothing changed. It now runs
+  again only when its text would read differently.
+  [#6249](https://github.com/griptape-ai/griptape-nodes-engine/issues/6249),
+  [#6050](https://github.com/griptape-ai/griptape-nodes-engine/issues/6050)
+- Previewing a video whose properties ffprobe reports in an unexpected form, such as a malformed
+  frame rate, no longer fails. Only the unreadable property is left empty, and a warning names it.
+- Running a Workflow node no longer logs strict-mode warnings that blame it for the
+  `GriptapeNodes.ContextManager()` calls in the workflow file it runs.
+  [#6303](https://github.com/griptape-ai/griptape-nodes-engine/issues/6303)
+
 ## 2026-11-18
+
+### [Engine 0.111.1](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.111.0...v0.111.1)
+
+#### Fixed
+
+- A node in a library that runs in its own process now names itself when Griptape Cloud refuses its
+  `BudgetAccessRequest` and it raises the refusal: the run stops with "Budget stopped this run.
+  'Node' was blocked by ...", as for a node in the engine, instead of "The next call was blocked by".
+  [#5869](https://github.com/griptape-ai/griptape-nodes-engine/issues/5869)
 
 ### [Engine 0.108.1](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.108.0...v0.108.1)
 

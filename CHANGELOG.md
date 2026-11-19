@@ -81,6 +81,213 @@
   `GriptapeNodes.ContextManager()` calls in the workflow file it runs.
   [#6303](https://github.com/griptape-ai/griptape-nodes-engine/issues/6303)
 
+### App 0.105.0
+
+#### Added
+
+- `AppInitializationComplete` now carries the `engine_run_id` of the engine that sent it, so a client
+  that stays connected while the engine restarts, such as one on the relay, sees the restart without
+  waiting for a heartbeat. A worker's copy, which the app also forwards, has `is_worker` set and its
+  own run id.
+- The engine registry record now carries `engine_run_id` and `open_workflows`, each open workflow's
+  `workflow_id`, `name` (without its folders), `display_name`, `is_saved` and `has_active_flow`.
+  `current_workflow` and `has_active_flow` describe the open workflow only while exactly one is
+  open.
+- `gtn request` takes `--workflow-id` (`-w`) to name the open workflow the request acts on, for
+  engines with several workflows open. `ListOpenWorkflowsRequest` lists their ids.
+
+#### Changed
+
+- License denials, such as for loading a library or invoking a model, now list each piece of advice
+  once with the policies behind it: `Ask your admin for X. Source: policy 'no-x'.`
+- **Breaking:** Progress events the app forwards now name their node's workflow in
+  `open_workflow_id` instead of `workflow_id`, as results do.
+- Griptape Nodes Engine is pinned to 0.112.0. See its
+  [release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.112.0).
+- The editor installed with the `editor` extra is pinned to 0.130.3.
+- A library's worker another engine runs for this one now makes its Griptape Cloud calls (model
+  access, secrets) on the artist's license session, instead of the license of the computer that
+  runs the worker.
+- Two engines can now each run a library's worker for the other over the same connection. An
+  engine that dialed another first is no longer refused when asked to host a worker for it.
+
+#### Removed
+
+- **Breaking:** `gtn engine`'s `--session-id` and `--library-name` options, and the
+  `GTN_SESSION_ID` / `GTN_LIBRARY_NAME` environment variables that set them, are removed. The
+  engine now spawns and manages its own library workers directly; nothing replaces these for a
+  user, since starting a worker by hand is no longer something to do.
+- `GTN_WORKER_CONTROL_PLANE` is removed. Nothing replaces it: an engine always reaches the workers
+  it runs over its own private channel now.
+
+#### Fixed
+
+- The engine registry record's `is_executing` now reports whether any open workflow is running.
+  With several workflows open it was always unknown.
+- Requests from a library's worker process now pass the same license wire policy as requests from
+  any other client, instead of going unchecked. A request the policy refuses fails: a worker this
+  engine runs gets a generic message and the policy's reason is logged on the engine, while a
+  worker on another computer gets the policy's refusal, as any client of this engine does.
+- The engine registry record's `current_workflow` no longer includes the workflow's folders, so a
+  workflow saved in a subfolder or outside the workspace doesn't send its folder path to Griptape
+  Cloud.
+- A node that sends requests while it runs no longer gets strict-mode `state-read-bypassing-requests`
+  warnings for `EngineIdentityManager` and `ProjectManager`. The license policy check reads those
+  managers itself, and the warning blamed the running node for the read.
+
+### Editor 131
+
+#### Added
+
+- Added a "Pricing" page to the admin sidebar, behind the "Pricing" beta feature, showing what
+  each model and meter costs the organization, grouped by model, including active promos and when
+  they end.
+- When a Griptape Cloud budget stops a run or a chat reply, the node shows a "Budget" badge instead
+  of "Error", a stopped reply leaves a note in the thread, and the error history keeps the block in
+  full after the bar closes.
+- "Spend & Budgets" lists an Organization section above Projects. It holds organization-wide caps,
+  which Create Budget can now make, and the "Fallback Budget", which counts spend that no project
+  budget covers.
+- In "Spend & Budgets", the "Fallback Budget" can be a "Hard Limit" or a "Soft Limit" and can be
+  frozen, from "Edit Budget" or its row menu, but not deleted. Griptape Cloud accepts this from its
+  next release; until then it refuses, and "Edit Budget" shows its reason.
+- Selecting a node fades the connections that are not upstream or downstream of it, so the chain it
+  belongs to stands out. Connections return to full opacity when nothing is selected. **Settings →
+  Editor → Connection Focus** turns this on or off, sets how faded the other connections are, and
+  can rest them faded even with nothing selected. It has a preview.
+- The right sidebar has a new "Docs" panel that shows the docs each node library ships.
+- A node blocked by your license now lists the rules it breaks on the canvas. Each rule's own note
+  shows in quotation marks, since the policy's author writes it. Properties adds each rule's policy
+  and a "Copy details for admin" button. Older engines keep showing the warning message.
+- The icon picker offers about 185 more Lucide icons, and nodes and widgets can use them by name.
+- The workflow list shows the workflows already open on the engine under "Open now", each with an
+  "Open" button.
+- Requests for the open workflow carry its id as `open_workflow_id` on the request envelope. Hosts
+  that relay the editor's requests must pass it through.
+- An editor tab ignores run output, results, and edits that belong to another workflow, and only
+  changes to its own workflow mark it unsaved.
+- File → "Save Canvas as Image" saves a PNG picture of the whole canvas, the same as Cmd+I.
+- The Workflow Details dialog has a "Use canvas as thumbnail" button that sets the workflow's
+  thumbnail from the current canvas.
+- A workflow's description, thumbnail and template setting also open from File → "Workflow
+  Details…".
+- With the "Workflow tabs" beta feature on, every workflow tab shows a spinner while its workflow
+  runs, with the number of runs waiting behind it, a badge when its last run failed, and a dot when
+  it has unsaved changes, including tabs in the background. Closing a tab asks first only when it
+  has unsaved changes, or changes from before the editor opened, or has runs going or waiting.
+- With the "Workflow tabs" beta feature on (Settings → "Beta Features"), the header shows a tab for
+  each workflow open on the engine, in place of the shown workflow's name and thumbnail. Opening or
+  creating a workflow adds a tab instead of replacing the one shown, so "New" and "Open" no longer
+  ask to save first. Closing a tab closes its workflow, offering to save it if it has unsaved
+  changes.
+
+#### Changed
+
+- **Breaking:** The editor needs engine 0.109.0 or later and asks you to update older engines
+  instead of connecting. It opens, closes and lists workflows through requests that engine 0.109.0
+  adds.
+- In "Spend & Budgets", the "Over 75%" filter and "Budgets Above 75%" card are now "Past alert
+  threshold" and "Budgets Past Alert Threshold", and follow each budget's own first alert threshold,
+  as do its progress bar's marker, amber colour and a new bell beside the percentage. Usage Audit's
+  filters change the same way.
+- A "Monthly Limits" card replaces "Oversubscribed Budgets" in "Spend & Budgets". It shows the
+  organization's monthly cap beside the monthly totals for projects, access groups, license keys
+  and the Fallback Budget.
+- In the Admin Dashboard, "Spend & Budgets" and "Usage Audit" now appear without the "Spend & Budgets
+  and Usage Audit" admin beta feature, which is gone from the beta menu. Each page shows unless
+  Griptape Cloud says the organization's plan doesn't include it.
+- The "Disconnect" button, the "Can't Reach Your Engine" and "Unsupported Version!" boxes, and engine
+  error messages now use the same red as other delete and warning controls.
+- The engine picker in the header shows the workflow open in this editor for the connected engine,
+  and every workflow each other engine has open, instead of the one each engine opened last.
+- Downloading a workflow as an image (Cmd+I) now exports the whole workflow instead of only the
+  visible area, leaves out the minimap and controls, and finishes in a fraction of a second for
+  most workflows. Very large workflows are scaled down to keep the image under 16 megapixels.
+- The folder trail above the workflow list now cuts a long folder name short with an ellipsis, and
+  shows the full name in a tooltip. A trail with more than four steps folds the middle ones into a
+  "…" menu, so the current folder and the one above it stay in view.
+- When another client closes the workflow the editor has open, such as an agent or a library
+  refresh in another tab, the editor now shows the workflow list right away instead of reopening
+  the workflow a few seconds later. A workflow an agent opens now shows only in an editor with no
+  workflow open.
+- Parameter rows on a group's side rails are 32px tall with no gap between them, instead of 40px
+  with a 4px gap, so more parameters fit before the "Hidden" indicator appears.
+- When the web editor can't connect to an engine that signs in with a Griptape Nodes license, "Can't
+  Reach Your Engine" now says the web editor doesn't support license sign-in, with an "Open Desktop
+  App" button and a link to download the desktop app.
+- The Load Workflow modal now draws only the workflows that are visible, plus a screen's worth
+  above and below. On a project with 500 workflows, 31 rows are drawn instead of 500, and the new
+  list appears about 1 second sooner after a project switch.
+- Dates in "Release Notes" and the error details dialog, and timestamps in node logs, now follow your
+  locale, so a 24-hour clock shows `15:45:23` instead of `3:45:23`.
+- The Manage page now lists the engines registered to each of your organizations, instead of every
+  engine running under your account.
+- Permission templates in the Admin Dashboard are available only to Enterprise organizations.
+  On other tiers, "Permission Editor" lists only the Griptape templates, read-only and without
+  "Assign to", and "License Keys" and "Access Groups" hide the "Permissions" column, the template
+  picker, and the "Permission Builder" count.
+- The Professional plan in the subscription dialog now lists model credit as "available
+  pay-as-you-go" instead of "included", because new Professional subscriptions buy model credit
+  separately.
+- Panning and dragging on the canvas redraw less of the editor, so a large workflow stays
+  responsive while the view moves.
+- With the "Workflow tabs" beta feature on, "Refresh Libraries" closes every open workflow tab and
+  reopens only the one you were viewing from its file. It asks first when other tabs are open, since
+  their unsaved changes are lost.
+- "Save As..." and "Save As New Version" now carry on in the new file with the open workflow and
+  its node results, instead of reopening the file from disk. The original file stays in the
+  workflow list as a separate workflow.
+- A press on empty canvas no longer nudges the view before it travels far enough to count as a
+  drag: 6px for a mouse, 14px for a pen. Previously the view followed the very first pixel of
+  movement, so a click that drifted slightly also shifted the canvas.
+- "Usage Audit" opens on the last 30 days and offers quick date ranges.
+- Workflow tabs now show edits and runs from the chat agent or another editor. A workflow that was
+  open before the editor connected no longer always asks before closing.
+
+#### Fixed
+
+- The action icons on the Admin Dashboard's License Keys and Access Groups tables no longer scroll
+  off-screen in the desktop app.
+- Column headers on the Admin Dashboard's License Keys and Access Groups tables no longer spill
+  past their column.
+- Dragging the divider after the first column of the Admin Dashboard's License Keys and Access
+  Groups tables now resizes that column instead of the one to its right.
+- The row menu on the "Spend & Budgets" table stays pinned to the right edge, so budgets can be
+  edited without widening the window or scrolling sideways.
+- A chat reply that fails while you are viewing another thread now shows its error in the thread it
+  belongs to, not the one on screen.
+- Reopening the editor with a saved session no longer flashes "Connection Lost" before the editor
+  loads. The connection is kept instead of being dropped and redialed when the session is restored.
+- In "Spend & Budgets", Create Budget's project picker no longer offers "Default Project", which
+  always failed to save. Spend outside any project counts toward the Fallback Budget.
+- The close buttons in "Add Library", "Model Management", and the admin dashboard welcome dialog
+  now show a focus ring and hover background, and screen readers announce them as "Close".
+- When your engine is registered under a different organization than the one selected, the editor
+  no longer treats it as an old engine. Creating a workflow on it no longer fails with
+  "SetWorkflowContext Failed", and Manage Projects, Save As New Version, and AI Providers no longer
+  go missing.
+- Error toasts and failed chat replies no longer show raw JSON when the engine gives no readable
+  reason. They say so in plain words, and the toast's "View Details" still shows what the engine
+  sent.
+- File sizes of a terabyte or more now show their unit instead of "2.22 undefined" in media details,
+  the file browser, and the Model Management modal.
+- Parameter names on a group's side rails are no longer cut off at 150px. Each rail now grows
+  with its longest name, up to 240px, and a name that still doesn't fit shows in full in a
+  tooltip.
+- Collapsing or expanding a node inside a group now resizes the group to fit: expanding grows the box
+  around an overflowing child, and collapsing tightens it back up instead of leaving dead space.
+- Collapsing a node inside a group no longer moves the group, and no longer leaves the node hanging
+  outside the group's edge. The group now reclaims the dead space from its right and bottom edges and
+  stays where you put it, instead of jumping to wherever its top-leftmost node sat.
+- Completed downloads in the Model Management modal now show their size in the unit that fits, so a
+  50 MB model reads "50 MB" instead of "0.05 GB".
+- Switching between workflow tabs no longer drops the selection. Coming back to a tab shows the
+  nodes and connections that were selected when you left it.
+- Toasts no longer overlap the floating canvas toolbar when it is docked at the bottom of the canvas
+  (Settings → "General Settings" → "Canvas Toolbar Position"). Toasts and the "Saving workflow..."
+  indicator now sit just above the toolbar and track its height as it grows and shrinks, instead of
+  clearing a fixed gap that left them floating well above it.
+
 ## 2026-11-18
 
 ### [Engine 0.111.1](https://github.com/griptape-ai/griptape-nodes-engine/compare/v0.111.0...v0.111.1)

@@ -115,6 +115,343 @@
       ]
     },
     {
+      "id": "app@0.105.0",
+      "component": "App",
+      "version": "0.105.0",
+      "date": "2026-11-19",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Added",
+          "entries": [
+            {
+              "text": "`AppInitializationComplete` now carries the `engine_run_id` of the engine that sent it, so a client\nthat stays connected while the engine restarts, such as one on the relay, sees the restart without\nwaiting for a heartbeat. A worker's copy, which the app also forwards, has `is_worker` set and its\nown run id.",
+              "breaking": false
+            },
+            {
+              "text": "The engine registry record now carries `engine_run_id` and `open_workflows`, each open workflow's\n`workflow_id`, `name` (without its folders), `display_name`, `is_saved` and `has_active_flow`.\n`current_workflow` and `has_active_flow` describe the open workflow only while exactly one is\nopen.",
+              "breaking": false
+            },
+            {
+              "text": "`gtn request` takes `--workflow-id` (`-w`) to name the open workflow the request acts on, for\nengines with several workflows open. `ListOpenWorkflowsRequest` lists their ids.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "License denials, such as for loading a library or invoking a model, now list each piece of advice\nonce with the policies behind it: `Ask your admin for X. Source: policy 'no-x'.`",
+              "breaking": false
+            },
+            {
+              "text": "**Breaking:** Progress events the app forwards now name their node's workflow in\n`open_workflow_id` instead of `workflow_id`, as results do.",
+              "breaking": true
+            },
+            {
+              "text": "Griptape Nodes Engine is pinned to 0.112.0. See its\n[release notes](https://github.com/griptape-ai/griptape-nodes-engine/releases/tag/v0.112.0).",
+              "breaking": false
+            },
+            {
+              "text": "The editor installed with the `editor` extra is pinned to 0.130.3.",
+              "breaking": false
+            },
+            {
+              "text": "A library's worker another engine runs for this one now makes its Griptape Cloud calls (model\naccess, secrets) on the artist's license session, instead of the license of the computer that\nruns the worker.",
+              "breaking": false
+            },
+            {
+              "text": "Two engines can now each run a library's worker for the other over the same connection. An\nengine that dialed another first is no longer refused when asked to host a worker for it.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Removed",
+          "entries": [
+            {
+              "text": "**Breaking:** `gtn engine`'s `--session-id` and `--library-name` options, and the\n`GTN_SESSION_ID` / `GTN_LIBRARY_NAME` environment variables that set them, are removed. The\nengine now spawns and manages its own library workers directly; nothing replaces these for a\nuser, since starting a worker by hand is no longer something to do.",
+              "breaking": true
+            },
+            {
+              "text": "`GTN_WORKER_CONTROL_PLANE` is removed. Nothing replaces it: an engine always reaches the workers\nit runs over its own private channel now.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "The engine registry record's `is_executing` now reports whether any open workflow is running.\nWith several workflows open it was always unknown.",
+              "breaking": false
+            },
+            {
+              "text": "Requests from a library's worker process now pass the same license wire policy as requests from\nany other client, instead of going unchecked. A request the policy refuses fails: a worker this\nengine runs gets a generic message and the policy's reason is logged on the engine, while a\nworker on another computer gets the policy's refusal, as any client of this engine does.",
+              "breaking": false
+            },
+            {
+              "text": "The engine registry record's `current_workflow` no longer includes the workflow's folders, so a\nworkflow saved in a subfolder or outside the workspace doesn't send its folder path to Griptape\nCloud.",
+              "breaking": false
+            },
+            {
+              "text": "A node that sends requests while it runs no longer gets strict-mode `state-read-bypassing-requests`\nwarnings for `EngineIdentityManager` and `ProjectManager`. The license policy check reads those\nmanagers itself, and the warning blamed the running node for the read.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "editor@131",
+      "component": "Editor",
+      "version": "131",
+      "date": "2026-11-19",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Added",
+          "entries": [
+            {
+              "text": "Added a \"Pricing\" page to the admin sidebar, behind the \"Pricing\" beta feature, showing what\neach model and meter costs the organization, grouped by model, including active promos and when\nthey end.",
+              "breaking": false
+            },
+            {
+              "text": "When a Griptape Cloud budget stops a run or a chat reply, the node shows a \"Budget\" badge instead\nof \"Error\", a stopped reply leaves a note in the thread, and the error history keeps the block in\nfull after the bar closes.",
+              "breaking": false
+            },
+            {
+              "text": "\"Spend & Budgets\" lists an Organization section above Projects. It holds organization-wide caps,\nwhich Create Budget can now make, and the \"Fallback Budget\", which counts spend that no project\nbudget covers.",
+              "breaking": false
+            },
+            {
+              "text": "In \"Spend & Budgets\", the \"Fallback Budget\" can be a \"Hard Limit\" or a \"Soft Limit\" and can be\nfrozen, from \"Edit Budget\" or its row menu, but not deleted. Griptape Cloud accepts this from its\nnext release; until then it refuses, and \"Edit Budget\" shows its reason.",
+              "breaking": false
+            },
+            {
+              "text": "Selecting a node fades the connections that are not upstream or downstream of it, so the chain it\nbelongs to stands out. Connections return to full opacity when nothing is selected. **Settings →\nEditor → Connection Focus** turns this on or off, sets how faded the other connections are, and\ncan rest them faded even with nothing selected. It has a preview.",
+              "breaking": false
+            },
+            {
+              "text": "The right sidebar has a new \"Docs\" panel that shows the docs each node library ships.",
+              "breaking": false
+            },
+            {
+              "text": "A node blocked by your license now lists the rules it breaks on the canvas. Each rule's own note\nshows in quotation marks, since the policy's author writes it. Properties adds each rule's policy\nand a \"Copy details for admin\" button. Older engines keep showing the warning message.",
+              "breaking": false
+            },
+            {
+              "text": "The icon picker offers about 185 more Lucide icons, and nodes and widgets can use them by name.",
+              "breaking": false
+            },
+            {
+              "text": "The workflow list shows the workflows already open on the engine under \"Open now\", each with an\n\"Open\" button.",
+              "breaking": false
+            },
+            {
+              "text": "Requests for the open workflow carry its id as `open_workflow_id` on the request envelope. Hosts\nthat relay the editor's requests must pass it through.",
+              "breaking": false
+            },
+            {
+              "text": "An editor tab ignores run output, results, and edits that belong to another workflow, and only\nchanges to its own workflow mark it unsaved.",
+              "breaking": false
+            },
+            {
+              "text": "File → \"Save Canvas as Image\" saves a PNG picture of the whole canvas, the same as Cmd+I.",
+              "breaking": false
+            },
+            {
+              "text": "The Workflow Details dialog has a \"Use canvas as thumbnail\" button that sets the workflow's\nthumbnail from the current canvas.",
+              "breaking": false
+            },
+            {
+              "text": "A workflow's description, thumbnail and template setting also open from File → \"Workflow\nDetails…\".",
+              "breaking": false
+            },
+            {
+              "text": "With the \"Workflow tabs\" beta feature on, every workflow tab shows a spinner while its workflow\nruns, with the number of runs waiting behind it, a badge when its last run failed, and a dot when\nit has unsaved changes, including tabs in the background. Closing a tab asks first only when it\nhas unsaved changes, or changes from before the editor opened, or has runs going or waiting.",
+              "breaking": false
+            },
+            {
+              "text": "With the \"Workflow tabs\" beta feature on (Settings → \"Beta Features\"), the header shows a tab for\neach workflow open on the engine, in place of the shown workflow's name and thumbnail. Opening or\ncreating a workflow adds a tab instead of replacing the one shown, so \"New\" and \"Open\" no longer\nask to save first. Closing a tab closes its workflow, offering to save it if it has unsaved\nchanges.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "**Breaking:** The editor needs engine 0.109.0 or later and asks you to update older engines\ninstead of connecting. It opens, closes and lists workflows through requests that engine 0.109.0\nadds.",
+              "breaking": true
+            },
+            {
+              "text": "In \"Spend & Budgets\", the \"Over 75%\" filter and \"Budgets Above 75%\" card are now \"Past alert\nthreshold\" and \"Budgets Past Alert Threshold\", and follow each budget's own first alert threshold,\nas do its progress bar's marker, amber colour and a new bell beside the percentage. Usage Audit's\nfilters change the same way.",
+              "breaking": false
+            },
+            {
+              "text": "A \"Monthly Limits\" card replaces \"Oversubscribed Budgets\" in \"Spend & Budgets\". It shows the\norganization's monthly cap beside the monthly totals for projects, access groups, license keys\nand the Fallback Budget.",
+              "breaking": false
+            },
+            {
+              "text": "In the Admin Dashboard, \"Spend & Budgets\" and \"Usage Audit\" now appear without the \"Spend & Budgets\nand Usage Audit\" admin beta feature, which is gone from the beta menu. Each page shows unless\nGriptape Cloud says the organization's plan doesn't include it.",
+              "breaking": false
+            },
+            {
+              "text": "The \"Disconnect\" button, the \"Can't Reach Your Engine\" and \"Unsupported Version!\" boxes, and engine\nerror messages now use the same red as other delete and warning controls.",
+              "breaking": false
+            },
+            {
+              "text": "The engine picker in the header shows the workflow open in this editor for the connected engine,\nand every workflow each other engine has open, instead of the one each engine opened last.",
+              "breaking": false
+            },
+            {
+              "text": "Downloading a workflow as an image (Cmd+I) now exports the whole workflow instead of only the\nvisible area, leaves out the minimap and controls, and finishes in a fraction of a second for\nmost workflows. Very large workflows are scaled down to keep the image under 16 megapixels.",
+              "breaking": false
+            },
+            {
+              "text": "The folder trail above the workflow list now cuts a long folder name short with an ellipsis, and\nshows the full name in a tooltip. A trail with more than four steps folds the middle ones into a\n\"…\" menu, so the current folder and the one above it stay in view.",
+              "breaking": false
+            },
+            {
+              "text": "When another client closes the workflow the editor has open, such as an agent or a library\nrefresh in another tab, the editor now shows the workflow list right away instead of reopening\nthe workflow a few seconds later. A workflow an agent opens now shows only in an editor with no\nworkflow open.",
+              "breaking": false
+            },
+            {
+              "text": "Parameter rows on a group's side rails are 32px tall with no gap between them, instead of 40px\nwith a 4px gap, so more parameters fit before the \"Hidden\" indicator appears.",
+              "breaking": false
+            },
+            {
+              "text": "When the web editor can't connect to an engine that signs in with a Griptape Nodes license, \"Can't\nReach Your Engine\" now says the web editor doesn't support license sign-in, with an \"Open Desktop\nApp\" button and a link to download the desktop app.",
+              "breaking": false
+            },
+            {
+              "text": "The Load Workflow modal now draws only the workflows that are visible, plus a screen's worth\nabove and below. On a project with 500 workflows, 31 rows are drawn instead of 500, and the new\nlist appears about 1 second sooner after a project switch.",
+              "breaking": false
+            },
+            {
+              "text": "Dates in \"Release Notes\" and the error details dialog, and timestamps in node logs, now follow your\nlocale, so a 24-hour clock shows `15:45:23` instead of `3:45:23`.",
+              "breaking": false
+            },
+            {
+              "text": "The Manage page now lists the engines registered to each of your organizations, instead of every\nengine running under your account.",
+              "breaking": false
+            },
+            {
+              "text": "Permission templates in the Admin Dashboard are available only to Enterprise organizations.\nOn other tiers, \"Permission Editor\" lists only the Griptape templates, read-only and without\n\"Assign to\", and \"License Keys\" and \"Access Groups\" hide the \"Permissions\" column, the template\npicker, and the \"Permission Builder\" count.",
+              "breaking": false
+            },
+            {
+              "text": "The Professional plan in the subscription dialog now lists model credit as \"available\npay-as-you-go\" instead of \"included\", because new Professional subscriptions buy model credit\nseparately.",
+              "breaking": false
+            },
+            {
+              "text": "Panning and dragging on the canvas redraw less of the editor, so a large workflow stays\nresponsive while the view moves.",
+              "breaking": false
+            },
+            {
+              "text": "With the \"Workflow tabs\" beta feature on, \"Refresh Libraries\" closes every open workflow tab and\nreopens only the one you were viewing from its file. It asks first when other tabs are open, since\ntheir unsaved changes are lost.",
+              "breaking": false
+            },
+            {
+              "text": "\"Save As...\" and \"Save As New Version\" now carry on in the new file with the open workflow and\nits node results, instead of reopening the file from disk. The original file stays in the\nworkflow list as a separate workflow.",
+              "breaking": false
+            },
+            {
+              "text": "A press on empty canvas no longer nudges the view before it travels far enough to count as a\ndrag: 6px for a mouse, 14px for a pen. Previously the view followed the very first pixel of\nmovement, so a click that drifted slightly also shifted the canvas.",
+              "breaking": false
+            },
+            {
+              "text": "\"Usage Audit\" opens on the last 30 days and offers quick date ranges.",
+              "breaking": false
+            },
+            {
+              "text": "Workflow tabs now show edits and runs from the chat agent or another editor. A workflow that was\nopen before the editor connected no longer always asks before closing.",
+              "breaking": false
+            }
+          ]
+        },
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "The action icons on the Admin Dashboard's License Keys and Access Groups tables no longer scroll\noff-screen in the desktop app.",
+              "breaking": false
+            },
+            {
+              "text": "Column headers on the Admin Dashboard's License Keys and Access Groups tables no longer spill\npast their column.",
+              "breaking": false
+            },
+            {
+              "text": "Dragging the divider after the first column of the Admin Dashboard's License Keys and Access\nGroups tables now resizes that column instead of the one to its right.",
+              "breaking": false
+            },
+            {
+              "text": "The row menu on the \"Spend & Budgets\" table stays pinned to the right edge, so budgets can be\nedited without widening the window or scrolling sideways.",
+              "breaking": false
+            },
+            {
+              "text": "A chat reply that fails while you are viewing another thread now shows its error in the thread it\nbelongs to, not the one on screen.",
+              "breaking": false
+            },
+            {
+              "text": "Reopening the editor with a saved session no longer flashes \"Connection Lost\" before the editor\nloads. The connection is kept instead of being dropped and redialed when the session is restored.",
+              "breaking": false
+            },
+            {
+              "text": "In \"Spend & Budgets\", Create Budget's project picker no longer offers \"Default Project\", which\nalways failed to save. Spend outside any project counts toward the Fallback Budget.",
+              "breaking": false
+            },
+            {
+              "text": "The close buttons in \"Add Library\", \"Model Management\", and the admin dashboard welcome dialog\nnow show a focus ring and hover background, and screen readers announce them as \"Close\".",
+              "breaking": false
+            },
+            {
+              "text": "When your engine is registered under a different organization than the one selected, the editor\nno longer treats it as an old engine. Creating a workflow on it no longer fails with\n\"SetWorkflowContext Failed\", and Manage Projects, Save As New Version, and AI Providers no longer\ngo missing.",
+              "breaking": false
+            },
+            {
+              "text": "Error toasts and failed chat replies no longer show raw JSON when the engine gives no readable\nreason. They say so in plain words, and the toast's \"View Details\" still shows what the engine\nsent.",
+              "breaking": false
+            },
+            {
+              "text": "File sizes of a terabyte or more now show their unit instead of \"2.22 undefined\" in media details,\nthe file browser, and the Model Management modal.",
+              "breaking": false
+            },
+            {
+              "text": "Parameter names on a group's side rails are no longer cut off at 150px. Each rail now grows\nwith its longest name, up to 240px, and a name that still doesn't fit shows in full in a\ntooltip.",
+              "breaking": false
+            },
+            {
+              "text": "Collapsing or expanding a node inside a group now resizes the group to fit: expanding grows the box\naround an overflowing child, and collapsing tightens it back up instead of leaving dead space.",
+              "breaking": false
+            },
+            {
+              "text": "Collapsing a node inside a group no longer moves the group, and no longer leaves the node hanging\noutside the group's edge. The group now reclaims the dead space from its right and bottom edges and\nstays where you put it, instead of jumping to wherever its top-leftmost node sat.",
+              "breaking": false
+            },
+            {
+              "text": "Completed downloads in the Model Management modal now show their size in the unit that fits, so a\n50 MB model reads \"50 MB\" instead of \"0.05 GB\".",
+              "breaking": false
+            },
+            {
+              "text": "Switching between workflow tabs no longer drops the selection. Coming back to a tab shows the\nnodes and connections that were selected when you left it.",
+              "breaking": false
+            },
+            {
+              "text": "Toasts no longer overlap the floating canvas toolbar when it is docked at the bottom of the canvas\n(Settings → \"General Settings\" → \"Canvas Toolbar Position\"). Toasts and the \"Saving workflow...\"\nindicator now sit just above the toolbar and track its height as it grows and shrinks, instead of\nclearing a fixed gap that left them floating well above it.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "engine@0.111.1",
       "component": "Engine",
       "version": "0.111.1",

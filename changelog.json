@@ -166,6 +166,26 @@
       ]
     },
     {
+      "id": "desktop@0.30.3",
+      "component": "Desktop",
+      "version": "0.30.3",
+      "date": "2026-11-18",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Changed",
+          "entries": [
+            {
+              "text": "The bundled version of the Griptape Nodes app has been updated to `0.104.2`, with engine `0.108.1` and editor `0.130.2`.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "app@0.104.1",
       "component": "App",
       "version": "0.104.1",

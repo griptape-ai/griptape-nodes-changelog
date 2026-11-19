@@ -96,6 +96,12 @@
   published to Griptape Cloud, so they work for offline engines and engines this browser cannot
   reach. Engines that have not published fall back to asking the engine directly.
 
+### Desktop 0.30.3
+
+#### Changed
+
+- The bundled version of the Griptape Nodes app has been updated to `0.104.2`, with engine `0.108.1` and editor `0.130.2`.
+
 ## 2026-11-17
 
 ### App 0.104.1

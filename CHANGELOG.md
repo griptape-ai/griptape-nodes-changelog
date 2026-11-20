@@ -81,6 +81,13 @@
   `GriptapeNodes.ContextManager()` calls in the workflow file it runs.
   [#6303](https://github.com/griptape-ai/griptape-nodes-engine/issues/6303)
 
+### App 0.105.1
+
+#### Fixed
+
+- Creating a workflow in the editor installed with the `editor` extra no longer fails with
+  "CreateFlow Failed". The extra now installs editor 0.131.0, which works with engine 0.112.0.
+
 ### App 0.105.0
 
 #### Added

@@ -115,6 +115,26 @@
       ]
     },
     {
+      "id": "app@0.105.1",
+      "component": "App",
+      "version": "0.105.1",
+      "date": "2026-11-19",
+      "yanked": false,
+      "url": null,
+      "summary": null,
+      "changes": [
+        {
+          "type": "Fixed",
+          "entries": [
+            {
+              "text": "Creating a workflow in the editor installed with the `editor` extra no longer fails with\n\"CreateFlow Failed\". The extra now installs editor 0.131.0, which works with engine 0.112.0.",
+              "breaking": false
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "app@0.105.0",
       "component": "App",
       "version": "0.105.0",
